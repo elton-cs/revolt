@@ -1,0 +1,13 @@
+[package]
+name = "revolt"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bevy = "0.14.1"
+torii-client = { git = "https://github.com/dojoengine/dojo.git" }
+
+[patch.crates-io]
+starknet-core = { git = "https://github.com/kariy/starknet-rs", branch = "dojo-patch" }
+libp2p = { git = "https://github.com/libp2p/rust-libp2p", rev = "74e3157" }
+libp2p-webrtc-websys = { git = "https://github.com/libp2p/rust-libp2p", rev = "74e3157" }
