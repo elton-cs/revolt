@@ -5,6 +5,8 @@ edition = "2021"
 
 [dependencies]
 bevy = "0.14.1"
+image = "0.25.2"
+rand = "0.8.5"
 web-sys = "0.3.4"
 # libp2p = { git = "https://github.com/libp2p/rust-libp2p", rev = "74e3157" }
 # libp2p = { git = "https://github.com/libp2p/rust-libp2p" }

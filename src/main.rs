@@ -11,6 +11,7 @@ fn main() {
 
 fn default_camera(mut commands: Commands) {
     let mut camera_bundle = Camera2dBundle::default();
-    camera_bundle.projection.scale = 0.2;
+    camera_bundle.transform.translation = Vec3::new(120.0, 240.0, 1.0);
+    camera_bundle.projection.scale = 0.5;
     commands.spawn(camera_bundle);
 }
