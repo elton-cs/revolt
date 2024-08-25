@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use revolt::plugins::map_gen::MapPlugin;
+use revolt::plugins::{map_gen::MapPlugin, player::PlayerPlugin};
 
 fn main() {
     let mut app = App::new();
@@ -9,6 +9,7 @@ fn main() {
     app.add_systems(Update, display_num_entities);
 
     app.add_plugins(MapPlugin);
+    app.add_plugins(PlayerPlugin);
 
     app.run();
 }

@@ -1,7 +1,6 @@
+use super::constants::{TILE_SCALE, TILE_SIZE};
 use crate::utils::img_to_matrix::pixel_convertor;
 use bevy::prelude::*;
-
-const TILE_SIZE: f32 = 8.0;
 
 pub struct MapPlugin;
 impl Plugin for MapPlugin {
@@ -38,7 +37,7 @@ fn render_map(
                 y as f32 * TILE_SIZE,
                 0.0,
             ));
-            transform.scale = Vec3::splat(0.5);
+            transform.scale = TILE_SCALE;
 
             let texture_atlas = TextureAtlas {
                 layout: texture_atlas_layout_handle.clone(),
