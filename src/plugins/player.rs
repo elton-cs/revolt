@@ -1,10 +1,11 @@
-use super::constants::{PLAYER_SCALE, TILE_SIZE};
+use super::constants::{PLAYER_CAMERA_SCALE, PLAYER_SCALE, TILE_SIZE};
 use bevy::prelude::*;
 
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, (generate_player, render_player).chain());
+        app.add_systems(PostStartup, player_camera);
     }
 }
 
@@ -19,6 +20,9 @@ pub struct Player {
     freeze_moves: u32,
     health: u32,
 }
+
+#[derive(Debug, Component)]
+struct PlayerTag;
 
 impl Player {
     pub fn new(position_x: u32, position_y: u32) -> Self {
@@ -69,6 +73,15 @@ fn render_player(
             ..default()
         };
 
-        commands.spawn((texture_atlas, sprite_bundle));
+        commands.spawn((texture_atlas, sprite_bundle, PlayerTag));
     }
+}
+
+fn player_camera(mut commands: Commands, query_player: Query<&Transform, With<PlayerTag>>) {
+    let mut camera_bundle = Camera2dBundle::default();
+    let player = query_player.single();
+
+    camera_bundle.transform.translation = player.translation;
+    camera_bundle.projection.scale = PLAYER_CAMERA_SCALE;
+    commands.spawn(camera_bundle);
 }

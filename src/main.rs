@@ -5,7 +5,7 @@ fn main() {
     let mut app = App::new();
     app.add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()));
 
-    app.add_systems(PreStartup, default_camera);
+    // app.add_systems(PreStartup, default_camera);
     app.add_systems(Update, display_num_entities);
 
     app.add_plugins(MapPlugin);
