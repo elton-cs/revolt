@@ -1,4 +1,4 @@
-use super::img_to_matrix::pixel_convertor;
+use crate::utils::img_to_matrix::pixel_convertor;
 use bevy::prelude::*;
 
 const TILE_SIZE: f32 = 8.0;
