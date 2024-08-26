@@ -7,13 +7,22 @@ edition = "2021"
 bevy = "0.14.1"
 image = "0.25.2"
 rand = "0.8.5"
-web-sys = "0.3.4"
+async-channel = "2.3.1"
+starknet-crypto = "0.7.0"
+torii-client = { git = "https://github.com/dojoengine/dojo.git", tag = "v1.0.0-alpha.6" }
+torii-grpc = { git = "https://github.com/dojoengine/dojo.git", tag = "v1.0.0-alpha.6" }
+tokio = "1.39.3"
+# torii-client = { git = "https://github.com/dojoengine/dojo.git", rev = "f1c521451eab22d240ae378f8b2a9c6ae981375f" }
+# torii-grpc = { git = "https://github.com/dojoengine/dojo.git", rev = "f1c521451eab22d240ae378f8b2a9c6ae981375f" }
+# starknet-types-core = "~0.1.4"
+
+# web-sys = "0.3.4"
 # libp2p = { git = "https://github.com/libp2p/rust-libp2p", rev = "74e3157" }
 # libp2p = { git = "https://github.com/libp2p/rust-libp2p" }
 # torii-client = { git = "https://github.com/dojoengine/dojo.git" }
 # torii-relay = { git = "https://github.com/dojoengine/dojo.git" }
 
 [patch.crates-io]
-# starknet-core = { git = "https://github.com/kariy/starknet-rs", branch = "dojo-patch" }
+starknet-core = { git = "https://github.com/kariy/starknet-rs", branch = "dojo-patch" }
 # libp2p-webrtc-websys = { git = "https://github.com/libp2p/rust-libp2p", rev = "74e3157" }
 # web-sys = "0.3.4"

@@ -16,7 +16,6 @@ pub struct MapResource {
 
 pub fn gen_map_from_img(mut commands: Commands) {
     let map_matrix = pixel_convertor("assets/dungeon_pixelated.png");
-    // let map_matrix = pixel_convertor("assets/new_map_pixelated.png");
 
     commands.insert_resource(MapResource { matrix: map_matrix });
 }
