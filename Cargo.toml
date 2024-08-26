@@ -8,10 +8,15 @@ bevy = "0.14.1"
 image = "0.25.2"
 rand = "0.8.5"
 async-channel = "2.3.1"
+starknet = { git = "https://github.com/xJonathanLEI/starknet-rs", tag = "starknet/v0.11.0" }
 starknet-crypto = "0.7.0"
 torii-client = { git = "https://github.com/dojoengine/dojo.git", tag = "v1.0.0-alpha.6" }
 torii-grpc = { git = "https://github.com/dojoengine/dojo.git", tag = "v1.0.0-alpha.6" }
+dojo-world = { git = "https://github.com/dojoengine/dojo.git", tag = "v1.0.0-alpha.6" }
+
 tokio = "1.39.3"
+
+
 # torii-client = { git = "https://github.com/dojoengine/dojo.git", rev = "f1c521451eab22d240ae378f8b2a9c6ae981375f" }
 # torii-grpc = { git = "https://github.com/dojoengine/dojo.git", rev = "f1c521451eab22d240ae378f8b2a9c6ae981375f" }
 # starknet-types-core = "~0.1.4"

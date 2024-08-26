@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use revolt::{
     plugins::{map_gen::MapPlugin, player::PlayerPlugin},
-    torii::client::ToriiPlugin,
+    torii::{call_contracts::CallContractsPlugin, client::ToriiPlugin},
 };
 
 fn main() {
@@ -14,6 +14,7 @@ fn main() {
     app.add_plugins(MapPlugin);
     app.add_plugins(PlayerPlugin);
     app.add_plugins(ToriiPlugin);
+    app.add_plugins(CallContractsPlugin);
 
     app.run();
 }

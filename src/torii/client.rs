@@ -29,7 +29,7 @@ pub struct BevyEntity {
     pub dojo_entity: Entity,
 }
 
-fn setup_torii_client(mut commands: Commands) {
+pub fn setup_torii_client(mut commands: Commands) {
     let torii_url = "http://0.0.0.0:8080".to_string();
     let rpc_url = "http://0.0.0.0:5050".to_string();
     let relay_url = "/ip4/127.0.0.1/tcp/9090".to_string();
