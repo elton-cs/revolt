@@ -14,12 +14,12 @@ fn main() {
     app.run();
 }
 
-fn default_camera(mut commands: Commands) {
-    let mut camera_bundle = Camera2dBundle::default();
-    camera_bundle.transform.translation = Vec3::new(120.0, 240.0, 1.0);
-    camera_bundle.projection.scale = 0.5;
-    commands.spawn(camera_bundle);
-}
+// fn default_camera(mut commands: Commands) {
+//     let mut camera_bundle = Camera2dBundle::default();
+//     camera_bundle.transform.translation = Vec3::new(120.0, 240.0, 1.0);
+//     camera_bundle.projection.scale = 0.5;
+//     commands.spawn(camera_bundle);
+// }
 
 fn display_num_entities(query: Query<Entity>) {
     let num_entities = query.iter().count();

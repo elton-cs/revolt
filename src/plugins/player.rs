@@ -1,11 +1,15 @@
 use super::constants::{PLAYER_CAMERA_SCALE, PLAYER_SCALE, TILE_SIZE};
+use bevy::input::keyboard::{Key, KeyboardInput};
+use bevy::input::ButtonState;
 use bevy::prelude::*;
 
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, (generate_player, render_player).chain());
-        app.add_systems(PostStartup, player_camera);
+        app.add_systems(Startup, (generate_player, generate_player_render).chain());
+        app.add_systems(PostStartup, generate_player_camera);
+        app.add_systems(Update, move_player);
+        app.add_systems(PostUpdate, (update_player_render, update_player_camera));
     }
 }
 
@@ -44,7 +48,7 @@ fn generate_player(mut commands: Commands) {
     commands.spawn(player);
 }
 
-fn render_player(
+fn generate_player_render(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
@@ -77,11 +81,66 @@ fn render_player(
     }
 }
 
-fn player_camera(mut commands: Commands, query_player: Query<&Transform, With<PlayerTag>>) {
+fn generate_player_camera(
+    mut commands: Commands,
+    query_player: Query<&Transform, With<PlayerTag>>,
+) {
     let mut camera_bundle = Camera2dBundle::default();
     let player = query_player.single();
 
     camera_bundle.transform.translation = player.translation;
     camera_bundle.projection.scale = PLAYER_CAMERA_SCALE;
     commands.spawn(camera_bundle);
+}
+
+fn move_player(mut query: Query<&mut Player>, mut evr_kbd: EventReader<KeyboardInput>) {
+    let mut player = query.single_mut();
+
+    for ev in evr_kbd.read() {
+        if ev.state == ButtonState::Released {
+            continue;
+        }
+
+        match &ev.logical_key {
+            Key::ArrowUp => {
+                player.position_y += 1;
+            }
+            Key::ArrowDown => {
+                player.position_y -= 1;
+            }
+            Key::ArrowLeft => {
+                player.position_x -= 1;
+            }
+            Key::ArrowRight => {
+                player.position_x += 1;
+            }
+            _ => {}
+        }
+    }
+}
+
+fn update_player_camera(
+    query_player: Query<&Player>,
+    mut query_camera: Query<&mut Transform, With<Camera>>,
+) {
+    let player = query_player.single();
+    let mut transform = query_camera.single_mut();
+    transform.translation = Vec3::new(
+        player.position_x as f32 * TILE_SIZE,
+        player.position_y as f32 * TILE_SIZE,
+        2.0,
+    );
+}
+
+fn update_player_render(
+    query_player: Query<&Player>,
+    mut query_sprite: Query<&mut Transform, With<PlayerTag>>,
+) {
+    let player = query_player.single();
+    let mut transform = query_sprite.single_mut();
+    transform.translation = Vec3::new(
+        player.position_x as f32 * TILE_SIZE,
+        player.position_y as f32 * TILE_SIZE,
+        2.0,
+    );
 }
