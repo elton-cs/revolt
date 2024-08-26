@@ -1,3 +1,5 @@
+use crate::torii::models::Player;
+
 use super::constants::{PLAYER_CAMERA_SCALE, PLAYER_SCALE, TILE_SIZE};
 use bevy::input::keyboard::{Key, KeyboardInput};
 use bevy::input::ButtonState;
@@ -14,34 +16,7 @@ impl Plugin for PlayerPlugin {
 }
 
 #[derive(Debug, Component)]
-pub struct Player {
-    game_id: u32,
-    player_address: u32,
-    score: u32,
-    is_alive: bool,
-    position_x: u32,
-    position_y: u32,
-    freeze_moves: u32,
-    health: u32,
-}
-
-#[derive(Debug, Component)]
 struct PlayerTag;
-
-impl Player {
-    pub fn new(position_x: u32, position_y: u32) -> Self {
-        Player {
-            game_id: 0,
-            player_address: 0,
-            score: 0,
-            is_alive: true,
-            position_x,
-            position_y,
-            freeze_moves: 0,
-            health: 100,
-        }
-    }
-}
 
 fn generate_player(mut commands: Commands) {
     let player = Player::new(3, 42);
@@ -101,6 +76,7 @@ fn move_player(mut query: Query<&mut Player>, mut evr_kbd: EventReader<KeyboardI
             continue;
         }
 
+        // TODO: Swap these over to Starknet contract calls
         match &ev.logical_key {
             Key::ArrowUp => {
                 player.position_y += 1;

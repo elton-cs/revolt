@@ -13,7 +13,6 @@ web-sys = "0.3.4"
 # torii-client = { git = "https://github.com/dojoengine/dojo.git" }
 # torii-relay = { git = "https://github.com/dojoengine/dojo.git" }
 
-
 [patch.crates-io]
 # starknet-core = { git = "https://github.com/kariy/starknet-rs", branch = "dojo-patch" }
 # libp2p-webrtc-websys = { git = "https://github.com/libp2p/rust-libp2p", rev = "74e3157" }
