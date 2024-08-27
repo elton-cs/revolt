@@ -5,10 +5,7 @@ use crate::plugins::constants::{
 use bevy::{input::common_conditions::input_just_pressed, prelude::*};
 use starknet::{
     accounts::{Account, Call, ExecutionEncoding, SingleOwnerAccount},
-    core::{
-        chain_id,
-        utils::{cairo_short_string_to_felt, get_selector_from_name},
-    },
+    core::utils::{cairo_short_string_to_felt, get_selector_from_name},
     providers::{jsonrpc::HttpTransport, JsonRpcClient, Url},
     signers::{LocalWallet, SigningKey},
 };
@@ -41,7 +38,7 @@ fn setup_starknet_contract_caller(mut commands: Commands) {
     ));
     let address = Felt::from_hex(PLAYER_CONTRACT_ADDRESS).unwrap();
 
-    let mut account: SingleOwnerAccount<JsonRpcClient<HttpTransport>, LocalWallet> =
+    let account: SingleOwnerAccount<JsonRpcClient<HttpTransport>, LocalWallet> =
         SingleOwnerAccount::new(
             provider,
             signer,
