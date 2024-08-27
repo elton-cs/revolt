@@ -2,7 +2,7 @@ use crate::utils::constants::{
     LOCAL_WALLET_PRIVATE_KEY, PLAYER_CONTRACT_ADDRESS, STARKNET_RS_JSONRPC_URL,
 };
 
-use super::client::{setup_torii_client, ToriiClient};
+use super::{client::setup_torii_client, tokio::TokioRuntime};
 use bevy::{input::common_conditions::input_just_pressed, prelude::*};
 use starknet::{
     accounts::{Account, Call, ExecutionEncoding, SingleOwnerAccount},
@@ -50,17 +50,14 @@ fn setup_starknet_contract_caller(mut commands: Commands) {
     commands.insert_resource(StarknetAccount(account));
 }
 
-fn send_simple_transaction(
-    tokio_runtime_res: Res<ToriiClient>,
-    account_res: ResMut<StarknetAccount>,
-) {
+fn send_simple_transaction(account_res: ResMut<StarknetAccount>, tokio: Res<TokioRuntime>) {
     let actions_contract_address =
         Felt::from_hex("0x34a3bf116ba899adcc24e885548dcd981aa96c0aeac9ccf551429fd0c6f91cf")
             .unwrap();
 
     let selector = get_selector_from_name("create_game").unwrap();
 
-    tokio_runtime_res.tokio_runtime.block_on(async move {
+    tokio.runtime.block_on(async move {
         let result = account_res
             .0
             .execute_v1(vec![Call {

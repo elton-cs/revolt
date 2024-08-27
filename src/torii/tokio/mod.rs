@@ -3,7 +3,7 @@ use bevy::prelude::*;
 pub struct TokioPlugin;
 impl Plugin for TokioPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, setup_tokio_client);
+        app.add_systems(PreStartup, setup_tokio_client);
     }
 }
 
