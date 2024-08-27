@@ -1,20 +1,58 @@
 use crate::{
     plugins::dojo_to_bevy::map::Tile,
-    utils::constants::{MAP_SIZE, TILE_SCALE, TILE_SIZE},
+    utils::constants::{
+        GROUND_TEXTURE_INDEX, GROUND_Z_HEIGHT, MAP_SIZE, TILE_SCALE, TILE_SIZE, WALL_TEXTURE_INDEX,
+        WALL_Z_HEIGHT,
+    },
 };
 use bevy::prelude::*;
 
 pub struct MapRendererPlugin;
 impl Plugin for MapRendererPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, render_tiles);
+        app.add_systems(Update, render_walls);
+        app.add_systems(Startup, render_ground);
     }
 }
 
 #[derive(Component)]
 pub struct RenderedTile;
 
-fn render_tiles(
+fn render_ground(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
+) {
+    let map_texture = asset_server.load("2_tiles.png");
+    let map_layout = TextureAtlasLayout::from_grid(UVec2::new(16, 16), 2, 1, None, None);
+    let texture_atlas_layout_handle = texture_atlas_layouts.add(map_layout);
+
+    let (map_max_x, map_max_y) = MAP_SIZE;
+
+    for x in 0..map_max_x {
+        for y in 0..map_max_y {
+            let (x, y) = (x as f32 * TILE_SIZE, y as f32 * TILE_SIZE);
+
+            let mut transform = Transform::from_translation(Vec3::new(x, y, GROUND_Z_HEIGHT));
+            transform.scale = TILE_SCALE;
+
+            let texture_atlas = TextureAtlas {
+                layout: texture_atlas_layout_handle.clone(),
+                index: GROUND_TEXTURE_INDEX,
+            };
+
+            let sprite_bundle = SpriteBundle {
+                transform,
+                texture: map_texture.clone(),
+                ..default()
+            };
+
+            commands.spawn((texture_atlas, sprite_bundle));
+        }
+    }
+}
+
+fn render_walls(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
@@ -29,12 +67,12 @@ fn render_tiles(
         let flip_y = MAP_SIZE.1 - y - 1;
         let (x, y) = (x as f32 * TILE_SIZE, flip_y as f32 * TILE_SIZE);
 
-        let mut transform = Transform::from_translation(Vec3::new(x, y, 0.0));
+        let mut transform = Transform::from_translation(Vec3::new(x, y, WALL_Z_HEIGHT));
         transform.scale = TILE_SCALE;
 
         let texture_atlas = TextureAtlas {
             layout: texture_atlas_layout_handle.clone(),
-            index: 0,
+            index: WALL_TEXTURE_INDEX,
         };
 
         let sprite_bundle = SpriteBundle {
