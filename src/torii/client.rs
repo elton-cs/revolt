@@ -7,6 +7,8 @@ use torii_grpc::{
     types::{schema::Entity as DojoEntity, EntityKeysClause, KeysClause, Query as ToriiQuery},
 };
 
+use crate::utils::constants::{TORII_RELAY_URL, TORII_RPC_URL, TORII_URL, TORII_WORLD_CONTRACT};
+
 pub struct ToriiPlugin;
 impl Plugin for ToriiPlugin {
     fn build(&self, app: &mut App) {
@@ -27,12 +29,10 @@ pub struct BevyEntity {
 }
 
 pub fn setup_torii_client(mut commands: Commands) {
-    let torii_url = "http://0.0.0.0:8080".to_string();
-    let rpc_url = "http://0.0.0.0:5050".to_string();
-    let relay_url = "/ip4/127.0.0.1/tcp/9090".to_string();
-    let world = Felt::from_hex_unchecked(
-        "0x5d97c46d046f442f125b6cc83057e97ee6e848c4921126acd8ae9d17b55b369",
-    );
+    let torii_url = TORII_URL.to_string();
+    let rpc_url = TORII_RPC_URL.to_string();
+    let relay_url = TORII_RELAY_URL.to_string();
+    let world = Felt::from_hex_unchecked(TORII_WORLD_CONTRACT);
     let (tx, rx) = unbounded();
 
     let runtime = tokio::runtime::Runtime::new().unwrap();
