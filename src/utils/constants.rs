@@ -31,3 +31,10 @@ pub const PLAYER_Z_HEIGHT: f32 = 2.0;
 
 pub const GROUND_TEXTURE_INDEX: usize = 0;
 pub const WALL_TEXTURE_INDEX: usize = 1;
+
+// UI constants
+pub const BUTTONS_Z_HEIGHT: f32 = 3.0;
+pub const BUTTONS_SCALE: Vec3 = Vec3::splat(0.2);
+
+pub const CREATE_BUTTON_LOCATION: Vec3 = Vec3::new(40.0, -40.0, BUTTONS_Z_HEIGHT);
+pub const JOIN_BUTTON_LOCATION: Vec3 = Vec3::new(200.0, -40.0, BUTTONS_Z_HEIGHT);
