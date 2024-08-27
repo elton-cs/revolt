@@ -22,4 +22,12 @@ pub const PLAYER_SCALE: Vec3 = Vec3::splat(0.25);
 pub const PLAYER_CAMERA_SCALE: f32 = 0.1;
 
 // Contract "constants"
-pub const MAP_SIZE: (u8, u8) = (21, 35);
+pub const MAP_SIZE: (u8, u8) = (35, 21);
+
+// Map rendering constants
+pub const GROUND_Z_HEIGHT: f32 = 0.0;
+pub const WALL_Z_HEIGHT: f32 = 1.0;
+pub const PLAYER_Z_HEIGHT: f32 = 2.0;
+
+pub const GROUND_TEXTURE_INDEX: usize = 0;
+pub const WALL_TEXTURE_INDEX: usize = 1;
