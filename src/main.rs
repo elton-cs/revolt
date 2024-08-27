@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use revolt::{
     plugins::{map_gen::MapPlugin, player::PlayerPlugin},
-    torii::{call_contracts::CallContractsPlugin, client::ToriiPlugin},
+    torii::{call_contracts::CallContractsPlugin, client::ToriiPlugin, tokio::TokioPlugin},
 };
 
 fn main() {
@@ -11,6 +11,7 @@ fn main() {
     // app.add_systems(PreStartup, default_camera);
     // app.add_systems(Update, display_num_entities);
 
+    app.add_plugins(TokioPlugin);
     app.add_plugins(MapPlugin);
     app.add_plugins(PlayerPlugin);
     app.add_plugins(ToriiPlugin);

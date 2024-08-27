@@ -60,7 +60,7 @@ fn send_simple_transaction(
 
     let selector = get_selector_from_name("create_game").unwrap();
 
-    tokio_runtime_res.runtime.block_on(async move {
+    tokio_runtime_res.tokio_runtime.block_on(async move {
         let result = account_res
             .0
             .execute_v1(vec![Call {

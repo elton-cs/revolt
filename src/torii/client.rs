@@ -19,8 +19,8 @@ impl Plugin for ToriiPlugin {
 
 #[derive(Resource)]
 pub struct ToriiClient {
-    pub entity_rx: Receiver<DojoEntity>,
-    pub runtime: tokio::runtime::Runtime,
+    pub dojo_entity_rx: Receiver<DojoEntity>,
+    pub tokio_runtime: tokio::runtime::Runtime,
 }
 
 #[derive(Component)]
@@ -36,6 +36,8 @@ pub fn setup_torii_client(mut commands: Commands) {
     let (tx, rx) = unbounded();
 
     let runtime = tokio::runtime::Runtime::new().unwrap();
+
+    info!("Torii client setup task spawned");
 
     runtime.spawn(async move {
         info!("Setting up Torii client");
@@ -69,11 +71,9 @@ pub fn setup_torii_client(mut commands: Commands) {
         }
     });
 
-    info!("Torii client setup task spawned");
-
     commands.insert_resource(ToriiClient {
-        entity_rx: rx,
-        runtime: runtime,
+        dojo_entity_rx: rx,
+        tokio_runtime: runtime,
     });
 }
 
@@ -82,7 +82,7 @@ fn update_entities(
     client: Res<ToriiClient>,
     mut query: Query<&mut BevyEntity>,
 ) {
-    match client.entity_rx.try_recv() {
+    match client.dojo_entity_rx.try_recv() {
         Ok(entity) => {}
         Err(err) => {
             if err != async_channel::TryRecvError::Empty {
