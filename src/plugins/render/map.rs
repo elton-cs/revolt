@@ -1,6 +1,6 @@
 use crate::{
     plugins::dojo_to_bevy::map::Tile,
-    utils::constants::{TILE_SCALE, TILE_SIZE},
+    utils::constants::{MAP_SIZE, TILE_SCALE, TILE_SIZE},
 };
 use bevy::prelude::*;
 
@@ -25,7 +25,10 @@ fn render_tiles(
     let texture_atlas_layout_handle = texture_atlas_layouts.add(map_layout);
 
     for (id, tile) in tiles_query.iter_mut() {
-        let (x, y) = (tile.pos_x as f32 * TILE_SIZE, tile.pos_y as f32 * TILE_SIZE);
+        let (x, y) = (tile.pos_x, tile.pos_y);
+        let flip_y = MAP_SIZE.1 - y - 1;
+        let (x, y) = (x as f32 * TILE_SIZE, flip_y as f32 * TILE_SIZE);
+
         let mut transform = Transform::from_translation(Vec3::new(x, y, 0.0));
         transform.scale = TILE_SCALE;
 
