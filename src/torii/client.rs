@@ -5,7 +5,7 @@ use crate::{
         TORII_WORLD_CONTRACT,
     },
 };
-use async_channel::{unbounded, Receiver};
+use async_channel::{bounded, Receiver};
 use bevy::{prelude::*, tasks::futures_lite::StreamExt};
 use starknet_crypto::Felt;
 use torii_client::client::Client;
@@ -18,7 +18,8 @@ pub struct ToriiPlugin;
 impl Plugin for ToriiPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_torii_client);
-        app.add_systems(Update, update_entities);
+        app.add_systems(Update, spawn_dojo_entities);
+        app.add_systems(Update, number_of_dojo_entities);
     }
 }
 
@@ -28,7 +29,7 @@ pub struct ToriiClient {
 }
 
 #[derive(Component)]
-pub struct BevyEntity {
+pub struct TempDojoEntityWrapper {
     pub dojo_entity: DojoEntity,
 }
 
@@ -37,7 +38,7 @@ pub fn setup_torii_client(mut commands: Commands, tokio: Res<TokioRuntime>) {
     let rpc_url = TORII_RPC_URL.to_string();
     let relay_url = TORII_RELAY_URL.to_string();
     let world = Felt::from_hex_unchecked(TORII_WORLD_CONTRACT);
-    let (tx, rx) = unbounded();
+    let (tx, rx) = bounded(16);
 
     tokio.runtime.spawn(async move {
         info!("Starting Torii client...");
@@ -54,7 +55,7 @@ pub fn setup_torii_client(mut commands: Commands, tokio: Res<TokioRuntime>) {
         let all_entities = client.entities(query).await.unwrap();
         for entity in all_entities {
             info!("Existing Entities: {:?}", entity);
-            // tx.send(entity).await.unwrap();
+            tx.send(entity).await.unwrap();
         }
 
         info!("Subscribing to entity updates...");
@@ -76,17 +77,22 @@ pub fn setup_torii_client(mut commands: Commands, tokio: Res<TokioRuntime>) {
     commands.insert_resource(ToriiClient { dojo_entity_rx: rx });
 }
 
-fn update_entities(
-    mut commands: Commands,
-    client: Res<ToriiClient>,
-    mut query: Query<&mut BevyEntity>,
-) {
+fn spawn_dojo_entities(mut commands: Commands, client: Res<ToriiClient>) {
     match client.dojo_entity_rx.try_recv() {
-        Ok(entity) => {}
+        Ok(entity) => {
+            commands.spawn(TempDojoEntityWrapper {
+                dojo_entity: entity,
+            });
+        }
         Err(err) => {
             if err != async_channel::TryRecvError::Empty {
                 error!("Error receiving entity: {:?}", err);
             }
         }
     }
+}
+
+fn number_of_dojo_entities(query: Query<&TempDojoEntityWrapper>) {
+    let value = query.iter().count();
+    info!("Number of Dojo entities: {}", value);
 }

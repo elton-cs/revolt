@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use revolt::{
-    plugins::{map_gen::MapPlugin, player::PlayerPlugin},
+    plugins::{dojo_to_bevy::map::BevyMapPlugin, map_gen::MapPlugin, player::PlayerPlugin},
     tokio::TokioPlugin,
     torii::{call_contracts::CallContractsPlugin, client::ToriiPlugin},
 };
@@ -10,13 +10,14 @@ fn main() {
     app.add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()));
 
     // app.add_systems(PreStartup, default_camera);
-    // app.add_systems(Update, display_num_entities);
+    app.add_systems(Update, display_num_entities);
 
     app.add_plugins(TokioPlugin);
-    app.add_plugins(MapPlugin);
-    app.add_plugins(PlayerPlugin);
     app.add_plugins(ToriiPlugin);
-    app.add_plugins(CallContractsPlugin);
+    app.add_plugins(BevyMapPlugin);
+    // app.add_plugins(MapPlugin);
+    // app.add_plugins(PlayerPlugin);
+    // app.add_plugins(CallContractsPlugin);
 
     app.run();
 }
