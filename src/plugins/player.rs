@@ -1,6 +1,5 @@
 use crate::torii::models::Player;
-
-use super::constants::{PLAYER_CAMERA_SCALE, PLAYER_SCALE, TILE_SIZE};
+use crate::utils::constants::{PLAYER_CAMERA_SCALE, PLAYER_SCALE, TILE_SIZE};
 use bevy::input::keyboard::{Key, KeyboardInput};
 use bevy::input::ButtonState;
 use bevy::prelude::*;

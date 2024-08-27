@@ -1,5 +1,7 @@
-use super::constants::{TILE_SCALE, TILE_SIZE};
-use crate::utils::img_to_matrix::pixel_convertor;
+use crate::utils::{
+    constants::{TILE_SCALE, TILE_SIZE},
+    img_to_matrix::pixel_convertor,
+};
 use bevy::prelude::*;
 
 pub struct MapPlugin;
