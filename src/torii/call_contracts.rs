@@ -1,8 +1,11 @@
-use crate::utils::constants::{
-    LOCAL_WALLET_PRIVATE_KEY, PLAYER_CONTRACT_ADDRESS, STARKNET_RS_JSONRPC_URL,
+use crate::{
+    tokio::TokioRuntime,
+    utils::constants::{
+        LOCAL_WALLET_PRIVATE_KEY, PLAYER_CONTRACT_ADDRESS, STARKNET_RS_JSONRPC_URL,
+    },
 };
 
-use super::{client::setup_torii_client, tokio::TokioRuntime};
+use super::client::setup_torii_client;
 use bevy::{input::common_conditions::input_just_pressed, prelude::*};
 use starknet::{
     accounts::{Account, Call, ExecutionEncoding, SingleOwnerAccount},

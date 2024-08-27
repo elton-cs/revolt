@@ -13,6 +13,7 @@ pub const TORII_RPC_URL: &str = "http://localhost:5050";
 pub const TORII_RELAY_URL: &str = "/ip4/127.0.0.1/tcp/9090";
 pub const TORII_WORLD_CONTRACT: &str =
     "0x5d97c46d046f442f125b6cc83057e97ee6e848c4921126acd8ae9d17b55b369";
+pub const EXISTING_ENTITY_QUERY_LIMIT: u32 = 500;
 
 // Bevy constants
 pub const TILE_SIZE: f32 = 8.0;
