@@ -11,14 +11,14 @@ impl Plugin for BevyMapPlugin {
 }
 
 #[derive(Component)]
-pub struct Map {
+pub struct RevoltMap {
     pub id: u32,
     pub rows: u8,
     pub cols: u8,
 }
 
 #[derive(Component)]
-pub struct Tile {
+pub struct RevoltTile {
     pub map_id: u32,
     pub pos_x: u8,
     pub pos_y: u8,
@@ -40,12 +40,12 @@ fn convert_to_bevy(mut query: Query<(Entity, &TempDojoEntityWrapper)>, mut comma
         if has_model {
             match dojo_entity.models[0].name.as_str() {
                 "revolt-Map" => {
-                    let map: Map = dojo_entity.into();
+                    let map: RevoltMap = dojo_entity.into();
                     commands.spawn(map);
                     commands.entity(id).despawn();
                 }
                 "revolt-Tile" => {
-                    let tile: Tile = dojo_entity.into();
+                    let tile: RevoltTile = dojo_entity.into();
                     commands.spawn(tile);
                     commands.entity(id).despawn();
                 }
@@ -63,13 +63,13 @@ fn convert_to_bevy(mut query: Query<(Entity, &TempDojoEntityWrapper)>, mut comma
     }
 }
 
-fn number_of_converted(query: Query<&Tile>) {
+fn number_of_converted(query: Query<&RevoltTile>) {
     let value = query.iter().count();
     info!("Number of converted tiles: {}", value);
 }
 
-impl Into<Map> for DojoEntity {
-    fn into(self) -> Map {
+impl Into<RevoltMap> for DojoEntity {
+    fn into(self) -> RevoltMap {
         let dojo_entity = self;
 
         let id = dojo_entity.models[0].children[0]
@@ -94,12 +94,12 @@ impl Into<Map> for DojoEntity {
             .unwrap()
             .clone();
 
-        Map { id, rows, cols }
+        RevoltMap { id, rows, cols }
     }
 }
 
-impl Into<Tile> for DojoEntity {
-    fn into(self) -> Tile {
+impl Into<RevoltTile> for DojoEntity {
+    fn into(self) -> RevoltTile {
         let dojo_entity = self;
 
         let map_id = dojo_entity.models[0].children[0]
@@ -131,7 +131,7 @@ impl Into<Tile> for DojoEntity {
             .unwrap()
             .clone();
 
-        Tile {
+        RevoltTile {
             map_id,
             pos_x,
             pos_y,

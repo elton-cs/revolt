@@ -1,5 +1,5 @@
 use crate::{
-    plugins::dojo_to_bevy::map::Tile,
+    plugins::dojo_to_bevy::map::{self, RevoltMap, RevoltTile},
     utils::constants::{
         GROUND_TEXTURE_INDEX, GROUND_Z_HEIGHT, MAP_SIZE, TILE_SCALE, TILE_SIZE, WALL_TEXTURE_INDEX,
         WALL_Z_HEIGHT,
@@ -11,23 +11,36 @@ pub struct MapRendererPlugin;
 impl Plugin for MapRendererPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, render_walls);
-        app.add_systems(Startup, render_ground);
+        app.add_systems(Update, render_ground);
     }
 }
 
 #[derive(Component)]
 pub struct RenderedTile;
 
+#[derive(Component)]
+pub struct RenderedGround;
+
 fn render_ground(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
+    query_map: Query<(Entity, &RevoltMap), Without<RenderedGround>>,
 ) {
     let map_texture = asset_server.load("2_tiles.png");
     let map_layout = TextureAtlasLayout::from_grid(UVec2::new(16, 16), 2, 1, None, None);
     let texture_atlas_layout_handle = texture_atlas_layouts.add(map_layout);
 
-    let (map_max_x, map_max_y) = MAP_SIZE;
+    // let (map_max_x, map_max_y) = MAP_SIZE;
+    let mut map_max_x: u8 = 0;
+    let mut map_max_y: u8 = 0;
+
+    for (id, map) in query_map.iter() {
+        // TODO: figure out why the x and y values need to be flipped for proper rendering
+        map_max_x = map.rows;
+        map_max_y = map.cols;
+        commands.entity(id).insert(RenderedGround);
+    }
 
     for x in 0..map_max_x {
         for y in 0..map_max_y {
@@ -56,7 +69,7 @@ fn render_walls(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
-    mut tiles_query: Query<(Entity, &Tile), Without<RenderedTile>>,
+    mut tiles_query: Query<(Entity, &RevoltTile), Without<RenderedTile>>,
 ) {
     let map_texture = asset_server.load("2_tiles.png");
     let map_layout = TextureAtlasLayout::from_grid(UVec2::new(16, 16), 2, 1, None, None);
