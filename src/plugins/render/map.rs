@@ -1,5 +1,5 @@
 use crate::{
-    plugins::dojo_to_bevy::map::{self, RevoltMap, RevoltTile},
+    plugins::dojo_to_bevy::{map::MapModel, tile::TileModel},
     utils::constants::{
         GROUND_TEXTURE_INDEX, GROUND_Z_HEIGHT, MAP_SIZE, TILE_SCALE, TILE_SIZE, WALL_TEXTURE_INDEX,
         WALL_Z_HEIGHT,
@@ -25,7 +25,7 @@ fn render_ground(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
-    query_map: Query<(Entity, &RevoltMap), Without<RenderedGround>>,
+    query_map: Query<(Entity, &MapModel), Without<RenderedGround>>,
 ) {
     let map_texture = asset_server.load("2_tiles.png");
     let map_layout = TextureAtlasLayout::from_grid(UVec2::new(16, 16), 2, 1, None, None);
@@ -98,7 +98,7 @@ fn render_walls(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
-    mut tiles_query: Query<(Entity, &RevoltTile), Without<RenderedTile>>,
+    mut tiles_query: Query<(Entity, &TileModel), Without<RenderedTile>>,
 ) {
     let map_texture = asset_server.load("2_tiles.png");
     let map_layout = TextureAtlasLayout::from_grid(UVec2::new(16, 16), 2, 1, None, None);
