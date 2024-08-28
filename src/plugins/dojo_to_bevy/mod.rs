@@ -1,9 +1,10 @@
+use crate::torii::client::TempDojoEntityWrapper;
 use bevy::prelude::*;
 use map::MapModel;
+use player::PlayerModel;
 use tile::TileModel;
-
-use crate::torii::client::TempDojoEntityWrapper;
 pub mod map;
+pub mod player;
 pub mod tile;
 pub mod type_extractors;
 
@@ -33,6 +34,11 @@ fn convert_to_bevy(mut query: Query<(Entity, &TempDojoEntityWrapper)>, mut comma
                 }
                 "revolt-Tile" => {
                     let tile: TileModel = dojo_entity.into();
+                    commands.spawn(tile);
+                    commands.entity(id).despawn();
+                }
+                "revolt-Player" => {
+                    let tile: PlayerModel = dojo_entity.into();
                     commands.spawn(tile);
                     commands.entity(id).despawn();
                 }
