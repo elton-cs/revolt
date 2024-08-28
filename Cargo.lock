@@ -9652,6 +9652,7 @@ version = "0.1.0"
 dependencies = [
  "async-channel 2.3.1",
  "bevy",
+ "dojo-types",
  "dojo-world",
  "image",
  "rand",

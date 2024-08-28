@@ -2,8 +2,10 @@ use crate::torii::client::TempDojoEntityWrapper;
 use bevy::prelude::*;
 use torii_grpc::types::schema::Entity as DojoEntity;
 
-pub struct BevyMapPlugin;
-impl Plugin for BevyMapPlugin {
+use super::type_extractors::{member_to_enum_to_u8, member_to_u32, member_to_u8};
+
+pub struct DojoMapModels;
+impl Plugin for DojoMapModels {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, convert_to_bevy);
         // app.add_systems(Update, number_of_converted);
@@ -72,27 +74,9 @@ impl Into<RevoltMap> for DojoEntity {
     fn into(self) -> RevoltMap {
         let dojo_entity = self;
 
-        let id = dojo_entity.models[0].children[0]
-            .ty
-            .as_primitive()
-            .unwrap()
-            .as_u32()
-            .unwrap()
-            .clone();
-        let rows = dojo_entity.models[0].children[1]
-            .ty
-            .as_primitive()
-            .unwrap()
-            .as_u8()
-            .unwrap()
-            .clone();
-        let cols = dojo_entity.models[0].children[2]
-            .ty
-            .as_primitive()
-            .unwrap()
-            .as_u8()
-            .unwrap()
-            .clone();
+        let id = member_to_u32(&dojo_entity.models[0].children[0]);
+        let rows = member_to_u8(&dojo_entity.models[0].children[1]);
+        let cols = member_to_u8(&dojo_entity.models[0].children[2]);
 
         RevoltMap { id, rows, cols }
     }
@@ -102,34 +86,10 @@ impl Into<RevoltTile> for DojoEntity {
     fn into(self) -> RevoltTile {
         let dojo_entity = self;
 
-        let map_id = dojo_entity.models[0].children[0]
-            .ty
-            .as_primitive()
-            .unwrap()
-            .as_u32()
-            .unwrap()
-            .clone();
-        let pos_x = dojo_entity.models[0].children[1]
-            .ty
-            .as_primitive()
-            .unwrap()
-            .as_u8()
-            .unwrap()
-            .clone();
-        let pos_y = dojo_entity.models[0].children[2]
-            .ty
-            .as_primitive()
-            .unwrap()
-            .as_u8()
-            .unwrap()
-            .clone();
-        let value = dojo_entity.models[0].children[3]
-            .ty
-            .as_enum()
-            .unwrap()
-            .option
-            .unwrap()
-            .clone();
+        let map_id = member_to_u32(&dojo_entity.models[0].children[0]);
+        let pos_x = member_to_u8(&dojo_entity.models[0].children[1]);
+        let pos_y = member_to_u8(&dojo_entity.models[0].children[2]);
+        let value = member_to_enum_to_u8(&dojo_entity.models[0].children[3]);
 
         RevoltTile {
             map_id,
