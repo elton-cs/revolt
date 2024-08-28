@@ -2,8 +2,7 @@ use bevy::prelude::*;
 use revolt::{
     plugins::{
         camera::CenteredCameraPlugin, dojo_systems::SendTransactionsPlugin,
-        dojo_to_bevy::RevoltModelsPlugin, map_gen::MapPlugin, player::PlayerPlugin,
-        render::DungeonRenderPlugin, ui::UIPlugin,
+        dojo_to_bevy::RevoltModelsPlugin, render::DungeonRenderPlugin, ui::UIPlugin,
     },
     tokio::TokioPlugin,
     torii::{call_contracts::CallContractsPlugin, client::ToriiPlugin},
@@ -22,8 +21,6 @@ fn main() {
     app.add_plugins(SendTransactionsPlugin);
 
     // app.add_plugins(UIPlugin);
-    // app.add_plugins(MapPlugin);
-    // app.add_plugins(PlayerPlugin);
     // app.add_plugins(CallContractsPlugin);
 
     app.run();

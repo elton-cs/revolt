@@ -1,4 +1,4 @@
-use crate::{plugins::player, torii::client::TempDojoEntityWrapper};
+use crate::torii::client::TempDojoEntityWrapper;
 
 use super::type_extractors::{
     member_to_bool, member_to_contract_address_to_felt, member_to_u16, member_to_u32, member_to_u8,
