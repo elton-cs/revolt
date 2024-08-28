@@ -16,14 +16,14 @@ use starknet::{
 };
 use starknet_crypto::Felt;
 
-pub struct AttackEnemy;
-impl Plugin for AttackEnemy {
+pub struct JoinGame;
+impl Plugin for JoinGame {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, send_attack_transaction);
+        app.add_systems(Update, send_join_transaction);
     }
 }
 
-fn send_attack_transaction(
+fn send_join_transaction(
     account_res: ResMut<BurnerWalletAccount>,
     tokio: Res<TokioRuntime>,
     mut evr_kbd: EventReader<KeyboardInput>,
@@ -36,7 +36,7 @@ fn send_attack_transaction(
             continue;
         }
         match &ev.logical_key {
-            Key::Space => {
+            Key::Shift => {
                 should_execute = true;
             }
             _ => {}
@@ -45,7 +45,7 @@ fn send_attack_transaction(
 
     if should_execute {
         let actions_contract_address = Felt::from_hex(GAME_SYSTEM_CONTRACT_ADDRESS).unwrap();
-        let selector = get_selector_from_name(GAME_SYSTEM_SELECTORS[3]).unwrap();
+        let selector = get_selector_from_name(GAME_SYSTEM_SELECTORS[1]).unwrap();
         let game_id = Felt::from_dec_str("1").unwrap();
 
         let calldata = vec![game_id];
@@ -61,7 +61,10 @@ fn send_attack_transaction(
                 .send()
                 .await;
 
-            info!("SENT A ATTACK TRANSACTION: {:?}", result);
+            info!(
+                "JOINING AN EXISTING GAME AT GAME_ID({:?}): {:?}",
+                game_id, result
+            );
         });
     }
 }
