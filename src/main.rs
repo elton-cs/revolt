@@ -23,8 +23,9 @@ fn main() {
     app.add_plugins(DojoManualBindgenPlugin);
     app.add_plugins(DungeonRenderPlugin);
     app.add_plugins(CenteredCameraPlugin);
-    app.add_plugins(UIPlugin);
+    // app.add_plugins(UIPlugin);
     app.add_plugins(SendTransactionsPlugin);
+
     // app.add_plugins(MapPlugin);
     // app.add_plugins(PlayerPlugin);
     // app.add_plugins(CallContractsPlugin);

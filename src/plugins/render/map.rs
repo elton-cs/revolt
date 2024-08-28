@@ -31,38 +31,67 @@ fn render_ground(
     let map_layout = TextureAtlasLayout::from_grid(UVec2::new(16, 16), 2, 1, None, None);
     let texture_atlas_layout_handle = texture_atlas_layouts.add(map_layout);
 
-    // let (map_max_x, map_max_y) = MAP_SIZE;
-    let mut map_max_x: u8 = 0;
-    let mut map_max_y: u8 = 0;
+    let map = query_map.get_single();
+    if let Ok((id, map)) = map {
+        let max_x = map.cols;
+        let max_y = map.rows;
 
-    for (id, map) in query_map.iter() {
-        // TODO: figure out why the x and y values need to be flipped for proper rendering
-        map_max_x = map.rows;
-        map_max_y = map.cols;
+        for x in 0..max_x {
+            for y in 0..max_y {
+                let (x, y) = (x as f32 * TILE_SIZE, y as f32 * TILE_SIZE * -1.0);
+
+                let mut transform = Transform::from_translation(Vec3::new(x, y, GROUND_Z_HEIGHT));
+                transform.scale = TILE_SCALE;
+
+                let texture_atlas = TextureAtlas {
+                    layout: texture_atlas_layout_handle.clone(),
+                    index: GROUND_TEXTURE_INDEX,
+                };
+
+                let sprite_bundle = SpriteBundle {
+                    transform,
+                    texture: map_texture.clone(),
+                    ..default()
+                };
+
+                commands.spawn((texture_atlas, sprite_bundle));
+            }
+        }
         commands.entity(id).insert(RenderedGround);
     }
 
-    for x in 0..map_max_x {
-        for y in 0..map_max_y {
-            let (x, y) = (x as f32 * TILE_SIZE, y as f32 * TILE_SIZE);
+    // // let (map_max_x, map_max_y) = MAP_SIZE;
+    // let mut map_max_x: u8 = 0;
+    // let mut map_max_y: u8 = 0;
 
-            let mut transform = Transform::from_translation(Vec3::new(x, y, GROUND_Z_HEIGHT));
-            transform.scale = TILE_SCALE;
+    // for (id, map) in query_map.iter() {
+    //     // TODO: figure out why the x and y values need to be flipped for proper rendering
+    //     map_max_x = map.rows;
+    //     map_max_y = map.cols;
+    //     commands.entity(id).insert(RenderedGround);
+    // }
 
-            let texture_atlas = TextureAtlas {
-                layout: texture_atlas_layout_handle.clone(),
-                index: GROUND_TEXTURE_INDEX,
-            };
+    // for x in 0..map_max_x {
+    //     for y in 0..map_max_y {
+    //         let (x, y) = (x as f32 * TILE_SIZE, y as f32 * TILE_SIZE);
 
-            let sprite_bundle = SpriteBundle {
-                transform,
-                texture: map_texture.clone(),
-                ..default()
-            };
+    //         let mut transform = Transform::from_translation(Vec3::new(x, y, GROUND_Z_HEIGHT));
+    //         transform.scale = TILE_SCALE;
 
-            commands.spawn((texture_atlas, sprite_bundle));
-        }
-    }
+    //         let texture_atlas = TextureAtlas {
+    //             layout: texture_atlas_layout_handle.clone(),
+    //             index: GROUND_TEXTURE_INDEX,
+    //         };
+
+    //         let sprite_bundle = SpriteBundle {
+    //             transform,
+    //             texture: map_texture.clone(),
+    //             ..default()
+    //         };
+
+    //         commands.spawn((texture_atlas, sprite_bundle));
+    //     }
+    // }
 }
 
 fn render_walls(
@@ -77,8 +106,9 @@ fn render_walls(
 
     for (id, tile) in tiles_query.iter_mut() {
         let (x, y) = (tile.pos_x, tile.pos_y);
-        let flip_y = MAP_SIZE.1 - y - 1;
-        let (x, y) = (x as f32 * TILE_SIZE, flip_y as f32 * TILE_SIZE);
+        let (x, y) = (x as f32 * TILE_SIZE, y as f32 * TILE_SIZE * -1.0);
+        // let flip_y = MAP_SIZE.1 - y - 1;
+        // let (x, y) = (x as f32 * TILE_SIZE, flip_y as f32 * TILE_SIZE);
 
         let mut transform = Transform::from_translation(Vec3::new(x, y, WALL_Z_HEIGHT));
         transform.scale = TILE_SCALE;
