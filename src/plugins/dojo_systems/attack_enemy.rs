@@ -18,19 +18,19 @@ use crate::{
 
 use super::account::BurnerWalletAccount;
 
-pub struct MovePlayer;
-impl Plugin for MovePlayer {
+pub struct AttackEnemy;
+impl Plugin for AttackEnemy {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, send_move_transaction);
+        app.add_systems(Update, send_attack_transaction);
     }
 }
 
-fn send_move_transaction(
+fn send_attack_transaction(
     account_res: ResMut<BurnerWalletAccount>,
     tokio: Res<TokioRuntime>,
     mut evr_kbd: EventReader<KeyboardInput>,
 ) {
-    let mut direction = 10;
+    let mut should_execute = false;
 
     for ev in evr_kbd.read() {
         // We don't care about key releases, only key presses
@@ -38,29 +38,19 @@ fn send_move_transaction(
             continue;
         }
         match &ev.logical_key {
-            Key::ArrowUp => {
-                direction = 1;
-            }
-            Key::ArrowDown => {
-                direction = 2;
-            }
-            Key::ArrowLeft => {
-                direction = 3;
-            }
-            Key::ArrowRight => {
-                direction = 4;
+            Key::Space => {
+                should_execute = true;
             }
             _ => {}
         }
     }
 
-    if direction < 5 {
+    if should_execute {
         let actions_contract_address = Felt::from_hex(GAME_SYSTEM_CONTRACT_ADDRESS).unwrap();
-        let selector = get_selector_from_name(GAME_SYSTEM_SELECTORS[2]).unwrap();
-
+        let selector = get_selector_from_name(GAME_SYSTEM_SELECTORS[3]).unwrap();
         let game_id = Felt::from_dec_str("1").unwrap();
-        let direction = Felt::from_dec_str(direction.to_string().as_str()).unwrap();
-        let calldata = vec![game_id, direction];
+
+        let calldata = vec![game_id];
 
         tokio.runtime.block_on(async move {
             let result = account_res
@@ -73,7 +63,7 @@ fn send_move_transaction(
                 .send()
                 .await;
 
-            info!("SENT A MOVE({:?}) TRANSACTION: {:?}", direction, result);
+            info!("SENT A ATTACK TRANSACTION: {:?}", result);
         });
     }
 }
