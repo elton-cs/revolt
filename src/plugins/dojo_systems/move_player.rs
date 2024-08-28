@@ -1,4 +1,11 @@
-use bevy::{input::common_conditions::input_just_pressed, prelude::*};
+use bevy::{
+    input::{
+        common_conditions::input_just_pressed,
+        keyboard::{Key, KeyboardInput},
+        ButtonState,
+    },
+    prelude::*,
+};
 use starknet::{
     accounts::{Account, Call},
     core::utils::get_selector_from_name,
@@ -15,35 +22,59 @@ use super::account::BurnerWalletAccount;
 pub struct MovePlayer;
 impl Plugin for MovePlayer {
     fn build(&self, app: &mut App) {
-        app.add_systems(
-            Update,
-            send_move_transaction.run_if(input_just_pressed(KeyCode::ArrowDown)),
-        );
+        app.add_systems(Update, send_move_transaction);
     }
 }
 
-fn send_move_transaction(account_res: ResMut<BurnerWalletAccount>, tokio: Res<TokioRuntime>) {
-    let actions_contract_address = Felt::from_hex(GAME_SYSTEM_CONTRACT_ADDRESS).unwrap();
-    let selector = get_selector_from_name(GAME_SYSTEM_SELECTORS[2]).unwrap();
+fn send_move_transaction(
+    account_res: ResMut<BurnerWalletAccount>,
+    tokio: Res<TokioRuntime>,
+    mut evr_kbd: EventReader<KeyboardInput>,
+) {
+    let mut direction = 10;
 
-    // need to provide:
-    // game_id: u32,
-    // direction: u8,
-    let game_id = Felt::from_dec_str("1").unwrap();
-    let direction = Felt::from_dec_str("2").unwrap();
-    let calldata = vec![game_id, direction];
+    for ev in evr_kbd.read() {
+        // We don't care about key releases, only key presses
+        if ev.state == ButtonState::Released {
+            continue;
+        }
+        match &ev.logical_key {
+            Key::ArrowUp => {
+                direction = 1;
+            }
+            Key::ArrowDown => {
+                direction = 2;
+            }
+            Key::ArrowLeft => {
+                direction = 3;
+            }
+            Key::ArrowRight => {
+                direction = 4;
+            }
+            _ => {}
+        }
+    }
 
-    tokio.runtime.block_on(async move {
-        let result = account_res
-            .0
-            .execute_v1(vec![Call {
-                to: actions_contract_address,
-                selector,
-                calldata,
-            }])
-            .send()
-            .await;
+    if direction < 5 {
+        let actions_contract_address = Felt::from_hex(GAME_SYSTEM_CONTRACT_ADDRESS).unwrap();
+        let selector = get_selector_from_name(GAME_SYSTEM_SELECTORS[2]).unwrap();
 
-        info!("SENT A TRANSACTION: {:?}", result);
-    });
+        let game_id = Felt::from_dec_str("1").unwrap();
+        let direction = Felt::from_dec_str(direction.to_string().as_str()).unwrap();
+        let calldata = vec![game_id, direction];
+
+        tokio.runtime.block_on(async move {
+            let result = account_res
+                .0
+                .execute_v1(vec![Call {
+                    to: actions_contract_address,
+                    selector,
+                    calldata,
+                }])
+                .send()
+                .await;
+
+            info!("SENT A MOVE({:?}) TRANSACTION: {:?}", direction, result);
+        });
+    }
 }
