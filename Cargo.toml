@@ -13,6 +13,7 @@ starknet-crypto = "0.7.0"
 torii-client = { git = "https://github.com/dojoengine/dojo.git", tag = "v1.0.0-alpha.6" }
 torii-grpc = { git = "https://github.com/dojoengine/dojo.git", tag = "v1.0.0-alpha.6" }
 dojo-world = { git = "https://github.com/dojoengine/dojo.git", tag = "v1.0.0-alpha.6" }
+dojo-types = { git = "https://github.com/dojoengine/dojo.git", tag = "v1.0.0-alpha.6" }
 
 tokio = "1.39.3"
 
