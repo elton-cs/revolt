@@ -1,9 +1,18 @@
+use crate::{plugins::player, torii::client::TempDojoEntityWrapper};
+
 use super::type_extractors::{
     member_to_bool, member_to_contract_address_to_felt, member_to_u16, member_to_u32, member_to_u8,
 };
 use bevy::prelude::*;
 use starknet_crypto::Felt;
 use torii_grpc::types::schema::Entity as DojoEntity;
+
+pub struct PlayerPlugin;
+impl Plugin for PlayerPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_systems(Update, spawn_or_update_player);
+    }
+}
 
 #[derive(Component)]
 pub struct PlayerModel {
@@ -17,6 +26,42 @@ pub struct PlayerModel {
     pub freeze: u8,
     pub health: u8,
 }
+
+// Should only spawn a player once
+fn spawn_or_update_player(
+    query_temp_dojo_entity: Query<&TempDojoEntityWrapper>,
+    mut query_player: Query<&mut PlayerModel>,
+    mut commands: Commands,
+) {
+    let player_count = query_player.iter().count();
+
+    for wrapper in query_temp_dojo_entity.iter() {
+        let has_model = wrapper.dojo_entity.models.len() > 0;
+        if has_model {
+            // let dojo_entity = wrapper.dojo_entity.clone();
+            match wrapper.dojo_entity.models[0].name.as_str() {
+                "revolt-Player" => {
+                    let new_player: PlayerModel = wrapper.dojo_entity.clone().into();
+                    if player_count > 0 {
+                        let mut player = query_player.single_mut();
+                        player.pos_x = new_player.pos_x;
+                        player.pos_y = new_player.pos_y;
+                    } else {
+                        commands.spawn(new_player);
+                    }
+                }
+                _ => {}
+            }
+        }
+    }
+}
+
+// fn update_player(
+//     query_temp_dojo_entity: Query<&TempDojoEntityWrapper>,
+//     query_player: Query<&PlayerModel>,
+//     mut commands: Commands,
+// ) {
+// }
 
 impl Into<PlayerModel> for DojoEntity {
     fn into(self) -> PlayerModel {
