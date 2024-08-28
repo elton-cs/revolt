@@ -7,15 +7,8 @@ pub struct TileModel {
     pub map_id: u32,
     pub pos_x: u8,
     pub pos_y: u8,
-    // pub value: TileValue,
     pub value: u8,
 }
-
-// pub enum TileValue {
-//     None,
-//     Wall,
-//     Path,
-// }
 
 impl Into<TileModel> for DojoEntity {
     fn into(self) -> TileModel {

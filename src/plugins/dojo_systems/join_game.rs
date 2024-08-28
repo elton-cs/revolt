@@ -31,7 +31,6 @@ fn send_join_transaction(
     let mut should_execute = false;
 
     for ev in evr_kbd.read() {
-        // We don't care about key releases, only key presses
         if ev.state == ButtonState::Released {
             continue;
         }

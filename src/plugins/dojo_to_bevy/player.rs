@@ -1,8 +1,7 @@
-use crate::torii::client::TempDojoEntityWrapper;
-
 use super::type_extractors::{
     member_to_bool, member_to_contract_address_to_felt, member_to_u16, member_to_u32, member_to_u8,
 };
+use crate::torii::client::TempDojoEntityWrapper;
 use bevy::prelude::*;
 use starknet_crypto::Felt;
 use torii_grpc::types::schema::Entity as DojoEntity;
@@ -17,7 +16,7 @@ impl Plugin for PlayerPlugin {
 #[derive(Component)]
 pub struct PlayerModel {
     pub game_id: u32,
-    // player_address is a contract address expressed as a Felt type
+    // NOTE: player_address is a contract address but is expressed as a Felt type
     pub player_address: Felt,
     pub score: u16,
     pub state: bool,
@@ -27,7 +26,7 @@ pub struct PlayerModel {
     pub health: u8,
 }
 
-// Should only spawn a player once
+// NOTE: Should only spawn a player once
 fn spawn_or_update_player(
     query_temp_dojo_entity: Query<&TempDojoEntityWrapper>,
     mut query_player: Query<&mut PlayerModel>,
@@ -62,13 +61,6 @@ fn spawn_or_update_player(
         }
     }
 }
-
-// fn update_player(
-//     query_temp_dojo_entity: Query<&TempDojoEntityWrapper>,
-//     query_player: Query<&PlayerModel>,
-//     mut commands: Commands,
-// ) {
-// }
 
 impl Into<PlayerModel> for DojoEntity {
     fn into(self) -> PlayerModel {

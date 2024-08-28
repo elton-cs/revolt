@@ -1,16 +1,14 @@
+use super::account::BurnerWalletAccount;
+use crate::{
+    tokio::TokioRuntime,
+    utils::constants::{GAME_SYSTEM_CONTRACT_ADDRESS, GAME_SYSTEM_SELECTORS},
+};
 use bevy::{input::common_conditions::input_just_pressed, prelude::*};
 use starknet::{
     accounts::{Account, Call},
     core::utils::get_selector_from_name,
 };
 use starknet_crypto::Felt;
-
-use crate::{
-    tokio::TokioRuntime,
-    utils::constants::{GAME_SYSTEM_CONTRACT_ADDRESS, GAME_SYSTEM_SELECTORS},
-};
-
-use super::account::BurnerWalletAccount;
 
 pub struct CreateGame;
 impl Plugin for CreateGame {

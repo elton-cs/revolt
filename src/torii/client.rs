@@ -92,7 +92,7 @@ fn spawn_dojo_entities(mut commands: Commands, client: Res<ToriiClient>) {
     }
 }
 
-fn number_of_dojo_entities(query: Query<&TempDojoEntityWrapper>) {
-    let value = query.iter().count();
-    info!("Number of Dojo entities: {}", value);
-}
+// fn number_of_dojo_entities(query: Query<&TempDojoEntityWrapper>) {
+//     let value = query.iter().count();
+//     info!("Number of Dojo entities: {}", value);
+// }

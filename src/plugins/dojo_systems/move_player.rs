@@ -1,3 +1,8 @@
+use super::account::BurnerWalletAccount;
+use crate::{
+    tokio::TokioRuntime,
+    utils::constants::{GAME_SYSTEM_CONTRACT_ADDRESS, GAME_SYSTEM_SELECTORS},
+};
 use bevy::{
     input::{
         keyboard::{Key, KeyboardInput},
@@ -10,13 +15,6 @@ use starknet::{
     core::utils::get_selector_from_name,
 };
 use starknet_crypto::Felt;
-
-use crate::{
-    tokio::TokioRuntime,
-    utils::constants::{GAME_SYSTEM_CONTRACT_ADDRESS, GAME_SYSTEM_SELECTORS},
-};
-
-use super::account::BurnerWalletAccount;
 
 pub struct MovePlayer;
 impl Plugin for MovePlayer {
