@@ -44,8 +44,15 @@ fn spawn_or_update_player(
                     let new_player: PlayerModel = wrapper.dojo_entity.clone().into();
                     if player_count > 0 {
                         let mut player = query_player.single_mut();
+                        // Sync with player dojo entity
+                        player.game_id = new_player.game_id;
+                        player.player_address = new_player.player_address;
                         player.pos_x = new_player.pos_x;
                         player.pos_y = new_player.pos_y;
+                        player.score = new_player.score;
+                        player.state = new_player.state;
+                        player.freeze = new_player.freeze;
+                        player.health = new_player.health;
                     } else {
                         commands.spawn(new_player);
                     }

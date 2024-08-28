@@ -8,11 +8,15 @@ pub struct PlayerRendererPlugin;
 impl Plugin for PlayerRendererPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, render_player);
+        app.add_systems(Update, update_player_render);
     }
 }
 
 #[derive(Component)]
 pub struct RenderedPlayer;
+
+#[derive(Component)]
+struct PlayerSprite;
 
 fn render_player(
     mut commands: Commands,
@@ -45,7 +49,24 @@ fn render_player(
             ..default()
         };
 
-        commands.spawn((texture_atlas, sprite_bundle));
+        commands.spawn((texture_atlas, sprite_bundle, PlayerSprite));
         commands.entity(id).insert(RenderedPlayer);
+    }
+}
+
+fn update_player_render(
+    query_rendered_player: Query<&PlayerModel, With<RenderedPlayer>>,
+    mut query_transform: Query<&mut Transform, With<PlayerSprite>>,
+) {
+    let player = query_rendered_player.get_single();
+    if let Ok(player) = player {
+        let (x, y) = (
+            player.pos_x as f32 * TILE_SIZE,
+            player.pos_y as f32 * TILE_SIZE * -1.0,
+        );
+
+        for mut transform in query_transform.iter_mut() {
+            transform.translation = Vec3::new(x, y, PLAYER_Z_HEIGHT);
+        }
     }
 }

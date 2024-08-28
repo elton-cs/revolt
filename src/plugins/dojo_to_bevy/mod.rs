@@ -1,7 +1,7 @@
 use crate::torii::client::TempDojoEntityWrapper;
 use bevy::prelude::*;
 use map::MapModel;
-use player::PlayerModel;
+use player::{PlayerModel, PlayerPlugin};
 use tile::TileModel;
 pub mod map;
 pub mod player;
@@ -11,6 +11,7 @@ pub mod type_extractors;
 pub struct RevoltModelsPlugin;
 impl Plugin for RevoltModelsPlugin {
     fn build(&self, app: &mut App) {
+        app.add_plugins(PlayerPlugin);
         app.add_systems(Update, convert_to_bevy);
     }
 }
@@ -37,11 +38,11 @@ fn convert_to_bevy(mut query: Query<(Entity, &TempDojoEntityWrapper)>, mut comma
                     commands.spawn(tile);
                     commands.entity(id).despawn();
                 }
-                "revolt-Player" => {
-                    let tile: PlayerModel = dojo_entity.into();
-                    commands.spawn(tile);
-                    commands.entity(id).despawn();
-                }
+                // "revolt-Player" => {
+                //     let player: PlayerModel = dojo_entity.into();
+                //     commands.spawn(player);
+                //     commands.entity(id).despawn();
+                // }
                 _ => {
                     // error!(
                     //     "Conversion pending implementation. Unknown entity: {}",
