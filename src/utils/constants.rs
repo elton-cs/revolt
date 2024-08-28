@@ -9,7 +9,7 @@ pub const PLAYER_CONTRACT_ADDRESS: &str =
 
 pub const GAME_SYSTEM_CONTRACT_ADDRESS: &str =
     "0x34a3bf116ba899adcc24e885548dcd981aa96c0aeac9ccf551429fd0c6f91cf";
-pub const GAME_SYSTEM_SELECTORS: [&str; 2] = ["create_game", "join_game"];
+pub const GAME_SYSTEM_SELECTORS: [&str; 4] = ["create_game", "join_game", "move", "attack"];
 
 // Torii contstants for receiving entity updates
 pub const TORII_URL: &str = "http://localhost:8080";

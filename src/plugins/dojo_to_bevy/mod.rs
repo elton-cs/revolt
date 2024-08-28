@@ -43,10 +43,10 @@ fn convert_to_bevy(mut query: Query<(Entity, &TempDojoEntityWrapper)>, mut comma
                     commands.entity(id).despawn();
                 }
                 _ => {
-                    error!(
-                        "Conversion pending implementation. Unknown entity: {}",
-                        dojo_entity.models[0].name
-                    );
+                    // error!(
+                    //     "Conversion pending implementation. Unknown entity: {}",
+                    //     dojo_entity.models[0].name
+                    // );
                 }
             }
         } else {
