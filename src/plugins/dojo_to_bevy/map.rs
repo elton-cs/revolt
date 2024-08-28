@@ -6,7 +6,7 @@ pub struct BevyMapPlugin;
 impl Plugin for BevyMapPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, convert_to_bevy);
-        app.add_systems(Update, number_of_converted);
+        // app.add_systems(Update, number_of_converted);
     }
 }
 

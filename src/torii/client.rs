@@ -19,7 +19,7 @@ impl Plugin for ToriiPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_torii_client);
         app.add_systems(Update, spawn_dojo_entities);
-        app.add_systems(Update, number_of_dojo_entities);
+        // app.add_systems(Update, number_of_dojo_entities);
     }
 }
 

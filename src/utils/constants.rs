@@ -7,6 +7,10 @@ pub const LOCAL_WALLET_PRIVATE_KEY: &str =
 pub const PLAYER_CONTRACT_ADDRESS: &str =
     "0xb3ff441a68610b30fd5e2abbf3a1548eb6ba6f3559f2862bf2dc757e5828ca";
 
+pub const GAME_SYSTEM_CONTRACT_ADDRESS: &str =
+    "0x34a3bf116ba899adcc24e885548dcd981aa96c0aeac9ccf551429fd0c6f91cf";
+pub const GAME_SYSTEM_SELECTORS: [&str; 2] = ["create_game", "join_game"];
+
 // Torii contstants for receiving entity updates
 pub const TORII_URL: &str = "http://localhost:8080";
 pub const TORII_RPC_URL: &str = "http://localhost:5050";
