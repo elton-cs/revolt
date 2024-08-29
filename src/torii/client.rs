@@ -19,7 +19,7 @@ impl Plugin for ToriiPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_torii_client);
         app.add_systems(Update, spawn_dojo_entities);
-        // app.add_systems(Update, number_of_dojo_entities);
+        app.add_systems(Update, number_of_dojo_entities);
     }
 }
 
@@ -92,7 +92,7 @@ fn spawn_dojo_entities(mut commands: Commands, client: Res<ToriiClient>) {
     }
 }
 
-// fn number_of_dojo_entities(query: Query<&TempDojoEntityWrapper>) {
-//     let value = query.iter().count();
-//     info!("Number of Dojo entities: {}", value);
-// }
+fn number_of_dojo_entities(query: Query<&TempDojoEntityWrapper>) {
+    let value = query.iter().count();
+    info!("Number of Dojo entities: {}", value);
+}

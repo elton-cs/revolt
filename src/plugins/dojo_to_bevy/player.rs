@@ -28,16 +28,13 @@ pub struct PlayerModel {
 
 // NOTE: Should only spawn up to 4 players
 fn spawn_or_update_player(
-    query_temp_dojo_entity: Query<&TempDojoEntityWrapper>,
+    query_temp_dojo_entity: Query<(Entity, &TempDojoEntityWrapper)>,
     mut query_player: Query<&mut PlayerModel>,
     mut commands: Commands,
 ) {
-    // let player_count = query_player.iter().count();
-
-    for wrapper in query_temp_dojo_entity.iter() {
+    for (id, wrapper) in query_temp_dojo_entity.iter() {
         let has_model = wrapper.dojo_entity.models.len() > 0;
         if has_model {
-            // let dojo_entity = wrapper.dojo_entity.clone();
             match wrapper.dojo_entity.models[0].name.as_str() {
                 "revolt-Player" => {
                     let new_player: PlayerModel = wrapper.dojo_entity.clone().into();
@@ -61,27 +58,20 @@ fn spawn_or_update_player(
                     if is_new_player {
                         commands.spawn(new_player);
                     }
-
-                    // if player_count > 0 {
-                    //     let mut player = query_player.single_mut();
-                    //     // Sync with player dojo entity
-                    //     player.game_id = new_player.game_id;
-                    //     player.player_address = new_player.player_address;
-                    //     player.pos_x = new_player.pos_x;
-                    //     player.pos_y = new_player.pos_y;
-                    //     player.score = new_player.score;
-                    //     player.state = new_player.state;
-                    //     player.freeze = new_player.freeze;
-                    //     player.health = new_player.health;
-                    // } else {
-                    //     commands.spawn(new_player);
-                    // }
+                    info!("Despawning player entity: {:?}", id);
+                    commands.entity(id).despawn();
                 }
                 _ => {}
             }
         }
     }
 }
+
+// fn clean_up_duplicate_entities(
+//     query_temp_dojo_entity: Query<(Entity, &TempDojoEntityWrapper)>,
+//     mut query_player: Query<&mut PlayerModel>,
+// ) {
+// }
 
 impl Into<PlayerModel> for DojoEntity {
     fn into(self) -> PlayerModel {
