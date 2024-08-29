@@ -1,8 +1,10 @@
 use crate::torii::client::TempDojoEntityWrapper;
 use bevy::prelude::*;
+use game::GamePlugin;
 use map::MapModel;
 use player::PlayerPlugin;
 use tile::TileModel;
+pub mod game;
 pub mod map;
 pub mod player;
 pub mod tile;
@@ -12,6 +14,7 @@ pub struct RevoltModelsPlugin;
 impl Plugin for RevoltModelsPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(PlayerPlugin);
+        app.add_plugins(GamePlugin);
         app.add_systems(Update, convert_to_bevy);
     }
 }
