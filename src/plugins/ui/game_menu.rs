@@ -1,6 +1,10 @@
 use bevy::prelude::*;
 
-use crate::states::GameStates;
+use crate::{
+    plugins::dojo_systems::account::PlayerAccount,
+    states::GameStates,
+    utils::constants::{P1_ADDRESS, P1_PK, P2_ADDRESS, P2_PK},
+};
 
 pub struct GameMenuPlugin;
 impl Plugin for GameMenuPlugin {
@@ -113,13 +117,25 @@ fn handle_button_events(
     mut create_game_writer: EventWriter<CreateGameEvent>,
     mut join_game_writer: EventWriter<JoinGameEvent>,
     mut state: ResMut<NextState<GameStates>>,
+    mut commands: Commands,
 ) {
     for (interaction, button_type) in query.iter() {
         if *interaction == Interaction::Pressed {
+            let pk: String;
+            let address: String;
             match button_type {
-                ButtonType::CreateGame => _ = create_game_writer.send(CreateGameEvent),
-                ButtonType::JoinGame => _ = join_game_writer.send(JoinGameEvent),
+                ButtonType::CreateGame => {
+                    _ = create_game_writer.send(CreateGameEvent);
+                    pk = P1_PK.to_string();
+                    address = P1_ADDRESS.to_string();
+                }
+                ButtonType::JoinGame => {
+                    _ = join_game_writer.send(JoinGameEvent);
+                    pk = P2_PK.to_string();
+                    address = P2_ADDRESS.to_string();
+                }
             };
+            commands.insert_resource(PlayerAccount { pk, address });
             state.set(GameStates::InGame);
         }
     }
