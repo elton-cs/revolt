@@ -1,5 +1,6 @@
-use super::account::BurnerWalletAccount;
 use crate::{
+    plugins::dojo_systems::account::build_account,
+    states::GameStates,
     tokio::TokioRuntime,
     utils::constants::{GAME_SYSTEM_CONTRACT_ADDRESS, GAME_SYSTEM_SELECTORS},
 };
@@ -19,15 +20,14 @@ use starknet_crypto::Felt;
 pub struct MovePlayer;
 impl Plugin for MovePlayer {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, send_move_transaction);
+        app.add_systems(
+            Update,
+            send_move_transaction.run_if(in_state(GameStates::InGame)),
+        );
     }
 }
 
-fn send_move_transaction(
-    account_res: ResMut<BurnerWalletAccount>,
-    tokio: Res<TokioRuntime>,
-    mut evr_kbd: EventReader<KeyboardInput>,
-) {
+fn send_move_transaction(tokio: Res<TokioRuntime>, mut evr_kbd: EventReader<KeyboardInput>) {
     let mut direction = 10;
 
     for ev in evr_kbd.read() {
@@ -60,9 +60,9 @@ fn send_move_transaction(
         let direction = Felt::from_dec_str(direction.to_string().as_str()).unwrap();
         let calldata = vec![game_id, direction];
 
-        tokio.runtime.block_on(async move {
-            let result = account_res
-                .0
+        tokio.runtime.spawn(async move {
+            let account = build_account();
+            let result = account
                 .execute_v1(vec![Call {
                     to: actions_contract_address,
                     selector,
