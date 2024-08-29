@@ -1,4 +1,6 @@
-use crate::utils::constants::STARKNET_RS_JSONRPC_URL;
+use crate::{
+    plugins::dojo_to_bevy::player::PlayerModel, utils::constants::STARKNET_RS_JSONRPC_URL,
+};
 use bevy::prelude::*;
 use starknet::{
     accounts::{ExecutionEncoding, SingleOwnerAccount},
@@ -14,8 +16,8 @@ impl Plugin for StarknetRsPlugin {
 
 #[derive(Resource)]
 pub struct PlayerAccount {
-    pub pk: String,
     pub address: String,
+    pub pk: String,
 }
 
 pub fn build_account(

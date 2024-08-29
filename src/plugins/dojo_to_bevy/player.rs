@@ -9,6 +9,7 @@ use torii_grpc::types::schema::Entity as DojoEntity;
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
+        app.add_systems(PostStartup, init_players_online);
         app.add_systems(Update, spawn_or_update_player);
     }
 }
@@ -26,11 +27,19 @@ pub struct PlayerModel {
     pub health: u8,
 }
 
+#[derive(Resource)]
+pub struct PlayersOnline(pub usize);
+
+fn init_players_online(mut commands: Commands) {
+    commands.insert_resource(PlayersOnline(0));
+}
+
 // NOTE: Should only spawn up to 4 players
 fn spawn_or_update_player(
     query_temp_dojo_entity: Query<(Entity, &TempDojoEntityWrapper)>,
     mut query_player: Query<&mut PlayerModel>,
     mut commands: Commands,
+    mut players_online: ResMut<PlayersOnline>,
 ) {
     for (id, wrapper) in query_temp_dojo_entity.iter() {
         let has_model = wrapper.dojo_entity.models.len() > 0;
@@ -57,6 +66,7 @@ fn spawn_or_update_player(
 
                     if is_new_player {
                         commands.spawn(new_player);
+                        players_online.0 += 1;
                     }
                     info!("Despawning player entity: {:?}", id);
                     commands.entity(id).despawn();
@@ -66,12 +76,6 @@ fn spawn_or_update_player(
         }
     }
 }
-
-// fn clean_up_duplicate_entities(
-//     query_temp_dojo_entity: Query<(Entity, &TempDojoEntityWrapper)>,
-//     mut query_player: Query<&mut PlayerModel>,
-// ) {
-// }
 
 impl Into<PlayerModel> for DojoEntity {
     fn into(self) -> PlayerModel {
