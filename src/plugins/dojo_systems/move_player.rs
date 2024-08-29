@@ -17,6 +17,8 @@ use starknet::{
 };
 use starknet_crypto::Felt;
 
+use super::account::PlayerAccount;
+
 pub struct MovePlayer;
 impl Plugin for MovePlayer {
     fn build(&self, app: &mut App) {
@@ -27,8 +29,13 @@ impl Plugin for MovePlayer {
     }
 }
 
-fn send_move_transaction(tokio: Res<TokioRuntime>, mut evr_kbd: EventReader<KeyboardInput>) {
-    let mut direction = 10;
+fn send_move_transaction(
+    tokio: Res<TokioRuntime>,
+    mut evr_kbd: EventReader<KeyboardInput>,
+    player_account: Res<PlayerAccount>,
+) {
+    let mut should_execute = false;
+    let mut direction = 0;
 
     for ev in evr_kbd.read() {
         // We don't care about key releases, only key presses
@@ -38,21 +45,28 @@ fn send_move_transaction(tokio: Res<TokioRuntime>, mut evr_kbd: EventReader<Keyb
         match &ev.logical_key {
             Key::ArrowUp => {
                 direction = 1;
+                should_execute = true;
             }
             Key::ArrowDown => {
                 direction = 2;
+                should_execute = true;
             }
             Key::ArrowLeft => {
                 direction = 3;
+                should_execute = true;
             }
             Key::ArrowRight => {
                 direction = 4;
+                should_execute = true;
             }
             _ => {}
         }
     }
 
-    if direction < 5 {
+    if should_execute {
+        let pk = player_account.pk.clone();
+        let address = player_account.address.clone();
+
         let actions_contract_address = Felt::from_hex(GAME_SYSTEM_CONTRACT_ADDRESS).unwrap();
         let selector = get_selector_from_name(GAME_SYSTEM_SELECTORS[2]).unwrap();
 
@@ -61,7 +75,7 @@ fn send_move_transaction(tokio: Res<TokioRuntime>, mut evr_kbd: EventReader<Keyb
         let calldata = vec![game_id, direction];
 
         tokio.runtime.spawn(async move {
-            let account = build_account();
+            let account = build_account(pk.as_str(), address.as_str());
             let result = account
                 .execute_v1(vec![Call {
                     to: actions_contract_address,
