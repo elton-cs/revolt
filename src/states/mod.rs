@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 #[derive(States, Debug, Clone, PartialEq, Eq, Hash)]
-enum GameStates {
+pub enum GameStates {
     MainMenu,
     InGame,
 }

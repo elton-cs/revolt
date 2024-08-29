@@ -1,12 +1,21 @@
 use bevy::prelude::*;
 
+use crate::states::GameStates;
+
 pub struct GameMenuPlugin;
 impl Plugin for GameMenuPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, setup_ui)
-           .add_systems(Update, (button_system, handle_button_events))
-           .add_event::<JoinGameEvent>()
-           .add_event::<CreateGameEvent>();
+        app.add_systems(Startup, setup_ui);
+        app.add_systems(
+            Update,
+            (button_system, handle_button_events).run_if(in_state(GameStates::MainMenu)),
+        );
+        app.add_systems(
+            OnExit(GameStates::MainMenu),
+            cleanup_ui.run_if(in_state(GameStates::InGame)),
+        );
+        app.add_event::<JoinGameEvent>();
+        app.add_event::<CreateGameEvent>();
     }
 }
 
@@ -16,6 +25,11 @@ enum ButtonType {
     CreateGame,
 }
 
+#[derive(Resource)]
+pub struct GameMenu {
+    ui_entity: Entity,
+}
+
 #[derive(Event)]
 pub struct JoinGameEvent;
 
@@ -23,7 +37,7 @@ pub struct JoinGameEvent;
 pub struct CreateGameEvent;
 
 fn setup_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands
+    let ui_entity = commands
         .spawn(NodeBundle {
             style: Style {
                 width: Val::Percent(100.0),
@@ -36,33 +50,41 @@ fn setup_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
             ..default()
         })
         .with_children(|parent| {
-            for (text, button_type) in [("Join Game", ButtonType::JoinGame), ("Create Game", ButtonType::CreateGame)] {
-                parent.spawn((
-                    ButtonBundle {
-                        style: Style {
-                            width: Val::Px(200.0),
-                            height: Val::Px(65.0),
-                            margin: UiRect::all(Val::Px(10.0)),
-                            justify_content: JustifyContent::Center,
-                            align_items: AlignItems::Center,
+            for (text, button_type) in [
+                ("Join Game", ButtonType::JoinGame),
+                ("Create Game", ButtonType::CreateGame),
+            ] {
+                parent
+                    .spawn((
+                        ButtonBundle {
+                            style: Style {
+                                width: Val::Px(200.0),
+                                height: Val::Px(65.0),
+                                margin: UiRect::all(Val::Px(10.0)),
+                                justify_content: JustifyContent::Center,
+                                align_items: AlignItems::Center,
+                                ..default()
+                            },
+                            background_color: Color::srgb(0.15, 0.15, 0.15).into(),
                             ..default()
                         },
-                        background_color: Color::srgb(0.15, 0.15, 0.15).into(),
-                        ..default()
-                    },
-                    button_type,
-                )).with_children(|parent| {
-                    parent.spawn(TextBundle::from_section(
-                        text,
-                        TextStyle {
-                            font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-                            font_size: 24.0,
-                            color: Color::srgb(0.9, 0.9, 0.9),
-                        },
-                    ));
-                });
+                        button_type,
+                    ))
+                    .with_children(|parent| {
+                        parent.spawn(TextBundle::from_section(
+                            text,
+                            TextStyle {
+                                font: asset_server.load("fonts/FiraSans-Bold.ttf"),
+                                font_size: 24.0,
+                                color: Color::srgb(0.9, 0.9, 0.9),
+                            },
+                        ));
+                    });
             }
-        });
+        })
+        .id();
+
+    commands.insert_resource(GameMenu { ui_entity });
 }
 
 fn button_system(
@@ -90,6 +112,7 @@ fn handle_button_events(
     query: Query<(&Interaction, &ButtonType), (Changed<Interaction>, With<Button>)>,
     mut create_game_writer: EventWriter<CreateGameEvent>,
     mut join_game_writer: EventWriter<JoinGameEvent>,
+    mut state: ResMut<NextState<GameStates>>,
 ) {
     for (interaction, button_type) in query.iter() {
         if *interaction == Interaction::Pressed {
@@ -97,6 +120,13 @@ fn handle_button_events(
                 ButtonType::CreateGame => _ = create_game_writer.send(CreateGameEvent),
                 ButtonType::JoinGame => _ = join_game_writer.send(JoinGameEvent),
             };
+            state.set(GameStates::InGame);
         }
+    }
+}
+
+fn cleanup_ui(mut commands: Commands, menu: Option<Res<GameMenu>>) {
+    if let Some(menu) = menu {
+        commands.entity(menu.ui_entity).despawn_recursive();
     }
 }
