@@ -18,6 +18,9 @@ pub struct RenderedPlayer;
 #[derive(Component)]
 struct PlayerSprite;
 
+#[derive(Component)]
+struct PlayerID(Entity);
+
 fn render_player(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
@@ -28,8 +31,7 @@ fn render_player(
     let map_layout = TextureAtlasLayout::from_grid(UVec2::new(32, 32), 4, 8, None, None);
     let texture_atlas_layout_handle = texture_atlas_layouts.add(map_layout);
 
-    let player = query_player.get_single();
-    if let Ok((id, player)) = player {
+    for (id, player) in query_player.iter() {
         let (x, y) = (
             player.pos_x as f32 * TILE_SIZE,
             player.pos_y as f32 * TILE_SIZE * -1.0,
@@ -49,24 +51,27 @@ fn render_player(
             ..default()
         };
 
-        commands.spawn((texture_atlas, sprite_bundle, PlayerSprite));
+        commands.spawn((texture_atlas, sprite_bundle, PlayerSprite, PlayerID(id)));
         commands.entity(id).insert(RenderedPlayer);
     }
 }
 
 fn update_player_render(
-    query_rendered_player: Query<&PlayerModel, With<RenderedPlayer>>,
-    mut query_transform: Query<&mut Transform, With<PlayerSprite>>,
+    query_rendered_player: Query<(Entity, &PlayerModel), With<RenderedPlayer>>,
+    mut query_transform: Query<(&mut Transform, &PlayerID), With<PlayerSprite>>,
 ) {
-    let player = query_rendered_player.get_single();
-    if let Ok(player) = player {
-        let (x, y) = (
-            player.pos_x as f32 * TILE_SIZE,
-            player.pos_y as f32 * TILE_SIZE * -1.0,
-        );
+    for (mut transform, parent) in query_transform.iter_mut() {
+        let parent_entity_id = parent.0;
 
-        for mut transform in query_transform.iter_mut() {
-            transform.translation = Vec3::new(x, y, PLAYER_Z_HEIGHT);
+        for (id, player) in query_rendered_player.iter() {
+            if parent_entity_id == id {
+                let (x, y) = (
+                    player.pos_x as f32 * TILE_SIZE,
+                    player.pos_y as f32 * TILE_SIZE * -1.0,
+                );
+
+                transform.translation = Vec3::new(x, y, PLAYER_Z_HEIGHT);
+            }
         }
     }
 }
