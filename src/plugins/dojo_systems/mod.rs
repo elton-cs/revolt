@@ -1,7 +1,7 @@
 use account::StarknetRsPlugin;
-use attack_enemy::AttackEnemy;
 use bevy::prelude::*;
 use create_game::CreateGame;
+use join_game::JoinGame;
 use move_player::MovePlayer;
 pub mod account;
 pub mod attack_enemy;
@@ -15,6 +15,6 @@ impl Plugin for SendTransactionsPlugin {
         app.add_plugins(StarknetRsPlugin);
         app.add_plugins(CreateGame);
         app.add_plugins(MovePlayer);
-        app.add_plugins(AttackEnemy);
+        app.add_plugins(JoinGame);
     }
 }
