@@ -1,4 +1,5 @@
 use account::StarknetRsPlugin;
+use attack_enemy::AttackEnemy;
 use bevy::prelude::*;
 use create_game::CreateGame;
 use join_game::JoinGame;
@@ -14,7 +15,8 @@ impl Plugin for SendTransactionsPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(StarknetRsPlugin);
         app.add_plugins(CreateGame);
-        app.add_plugins(MovePlayer);
         app.add_plugins(JoinGame);
+        app.add_plugins(MovePlayer);
+        app.add_plugins(AttackEnemy);
     }
 }
