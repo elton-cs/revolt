@@ -5,7 +5,9 @@ pub struct GameMenuPlugin;
 impl Plugin for GameMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_ui)
-           .add_systems(Update, (button_system, handle_button_events));
+           .add_systems(Update, (button_system, handle_button_events))
+           .add_event::<JoinGameEvent>()
+           .add_event::<CreateGameEvent>();
     }
 }
 
@@ -15,8 +17,13 @@ enum ButtonType {
     CreateGame,
 }
 
-fn setup_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
+#[derive(Event)]
+pub struct JoinGameEvent;
 
+#[derive(Event)]
+pub struct CreateGameEvent;
+
+fn setup_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
         .spawn(NodeBundle {
             style: Style {
@@ -82,13 +89,16 @@ fn button_system(
 
 fn handle_button_events(
     query: Query<(&Interaction, &ButtonType), (Changed<Interaction>, With<Button>)>,
+    mut join_game_writer: EventWriter<JoinGameEvent>,
+    mut create_game_writer: EventWriter<CreateGameEvent>,
 ) {
     for (interaction, button_type) in query.iter() {
         if *interaction == Interaction::Pressed {
             match button_type {
-                ButtonType::JoinGame => println!("Join Game button pressed!"),
-                ButtonType::CreateGame => println!("Create Game button pressed!"),
-            }
+                ButtonType::CreateGame => create_game_writer.send(CreateGameEvent),
+                // ButtonType::JoinGame => join_game_writer.send(JoinGameEvent),
+                ButtonType::JoinGame => create_game_writer.send(CreateGameEvent),
+            };
         }
     }
 }
