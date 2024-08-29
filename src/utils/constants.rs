@@ -16,6 +16,13 @@ pub const P3_PK: &str = "0xc5b2fcab997346f3ea1c00b002ecf6f382c5f9c9659a3894eb783
 pub const P4_ADDRESS: &str = "0x2d71e9c974539bb3ffb4b115e66a23d0f62a641ea66c4016e903454c8753bbc";
 pub const P4_PK: &str = "0x33003003001800009900180300d206308b0070db00121318d17b5e6262150b";
 
+pub const LIST_OF_ACCOUNTS: [[&str; 2]; 4] = [
+    [P1_ADDRESS, P1_PK],
+    [P2_ADDRESS, P2_PK],
+    [P3_ADDRESS, P3_PK],
+    [P4_ADDRESS, P4_PK],
+];
+
 pub const GAME_SYSTEM_CONTRACT_ADDRESS: &str =
     "0x34a3bf116ba899adcc24e885548dcd981aa96c0aeac9ccf551429fd0c6f91cf";
 pub const GAME_SYSTEM_SELECTORS: [&str; 4] = ["create_game", "join_game", "move", "attack"];

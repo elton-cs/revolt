@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 
 use crate::{
-    plugins::dojo_systems::account::PlayerAccount,
+    plugins::{dojo_systems::account::PlayerAccount, dojo_to_bevy::player::PlayersOnline},
     states::GameStates,
-    utils::constants::{P1_ADDRESS, P1_PK, P2_ADDRESS, P2_PK},
+    utils::constants::{LIST_OF_ACCOUNTS, P1_ADDRESS, P1_PK, P2_ADDRESS, P2_PK},
 };
 
 pub struct GameMenuPlugin;
@@ -118,24 +118,27 @@ fn handle_button_events(
     mut join_game_writer: EventWriter<JoinGameEvent>,
     mut state: ResMut<NextState<GameStates>>,
     mut commands: Commands,
+    players_online: Res<PlayersOnline>,
 ) {
     for (interaction, button_type) in query.iter() {
         if *interaction == Interaction::Pressed {
-            let pk: String;
-            let address: String;
+            let account = LIST_OF_ACCOUNTS[players_online.0];
+            commands.insert_resource(PlayerAccount {
+                address: account[0].to_string(),
+                pk: account[1].to_string(),
+            });
             match button_type {
                 ButtonType::CreateGame => {
                     _ = create_game_writer.send(CreateGameEvent);
-                    pk = P1_PK.to_string();
-                    address = P1_ADDRESS.to_string();
+                    // pk = P1_PK.to_string();
+                    // address = P1_ADDRESS.to_string();
                 }
                 ButtonType::JoinGame => {
                     _ = join_game_writer.send(JoinGameEvent);
-                    pk = P2_PK.to_string();
-                    address = P2_ADDRESS.to_string();
+                    // pk = P2_PK.to_string();
+                    // address = P2_ADDRESS.to_string();
                 }
             };
-            commands.insert_resource(PlayerAccount { pk, address });
             state.set(GameStates::InGame);
         }
     }
