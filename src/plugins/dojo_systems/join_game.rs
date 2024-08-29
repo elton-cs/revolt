@@ -1,4 +1,3 @@
-use super::account::PlayerAccount;
 use crate::{
     plugins::{dojo_systems::account::build_account, ui::game_menu::JoinGameEvent},
     tokio::TokioRuntime,
