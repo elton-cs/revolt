@@ -26,13 +26,13 @@ pub struct PlayerModel {
     pub health: u8,
 }
 
-// NOTE: Should only spawn a player once
+// NOTE: Should only spawn up to 4 players
 fn spawn_or_update_player(
     query_temp_dojo_entity: Query<&TempDojoEntityWrapper>,
     mut query_player: Query<&mut PlayerModel>,
     mut commands: Commands,
 ) {
-    let player_count = query_player.iter().count();
+    // let player_count = query_player.iter().count();
 
     for wrapper in query_temp_dojo_entity.iter() {
         let has_model = wrapper.dojo_entity.models.len() > 0;
@@ -41,20 +41,41 @@ fn spawn_or_update_player(
             match wrapper.dojo_entity.models[0].name.as_str() {
                 "revolt-Player" => {
                     let new_player: PlayerModel = wrapper.dojo_entity.clone().into();
-                    if player_count > 0 {
-                        let mut player = query_player.single_mut();
-                        // Sync with player dojo entity
-                        player.game_id = new_player.game_id;
-                        player.player_address = new_player.player_address;
-                        player.pos_x = new_player.pos_x;
-                        player.pos_y = new_player.pos_y;
-                        player.score = new_player.score;
-                        player.state = new_player.state;
-                        player.freeze = new_player.freeze;
-                        player.health = new_player.health;
-                    } else {
+                    let mut is_new_player = true;
+
+                    for mut player_model_in_bevy in query_player.iter_mut() {
+                        if player_model_in_bevy.player_address == new_player.player_address {
+                            // sync the player model in bevy with the new player
+                            player_model_in_bevy.game_id = new_player.game_id;
+                            player_model_in_bevy.player_address = new_player.player_address;
+                            player_model_in_bevy.pos_x = new_player.pos_x;
+                            player_model_in_bevy.pos_y = new_player.pos_y;
+                            player_model_in_bevy.score = new_player.score;
+                            player_model_in_bevy.state = new_player.state;
+                            player_model_in_bevy.freeze = new_player.freeze;
+                            player_model_in_bevy.health = new_player.health;
+                            is_new_player = false;
+                        }
+                    }
+
+                    if is_new_player {
                         commands.spawn(new_player);
                     }
+
+                    // if player_count > 0 {
+                    //     let mut player = query_player.single_mut();
+                    //     // Sync with player dojo entity
+                    //     player.game_id = new_player.game_id;
+                    //     player.player_address = new_player.player_address;
+                    //     player.pos_x = new_player.pos_x;
+                    //     player.pos_y = new_player.pos_y;
+                    //     player.score = new_player.score;
+                    //     player.state = new_player.state;
+                    //     player.freeze = new_player.freeze;
+                    //     player.health = new_player.health;
+                    // } else {
+                    //     commands.spawn(new_player);
+                    // }
                 }
                 _ => {}
             }
