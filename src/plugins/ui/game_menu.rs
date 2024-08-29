@@ -122,23 +122,26 @@ fn handle_button_events(
 ) {
     for (interaction, button_type) in query.iter() {
         if *interaction == Interaction::Pressed {
-            let account = LIST_OF_ACCOUNTS[players_online.0];
-            commands.insert_resource(PlayerAccount {
-                address: account[0].to_string(),
-                pk: account[1].to_string(),
-            });
+            // let account = LIST_OF_ACCOUNTS[players_online.0];
+            // commands.insert_resource(PlayerAccount {
+            //     address: account[0].to_string(),
+            //     pk: account[1].to_string(),
+            // });
+            let pk: String;
+            let address: String;
             match button_type {
                 ButtonType::CreateGame => {
                     _ = create_game_writer.send(CreateGameEvent);
-                    // pk = P1_PK.to_string();
-                    // address = P1_ADDRESS.to_string();
+                    pk = P1_PK.to_string();
+                    address = P1_ADDRESS.to_string();
                 }
                 ButtonType::JoinGame => {
                     _ = join_game_writer.send(JoinGameEvent);
-                    // pk = P2_PK.to_string();
-                    // address = P2_ADDRESS.to_string();
+                    pk = P2_PK.to_string();
+                    address = P2_ADDRESS.to_string();
                 }
             };
+            commands.insert_resource(PlayerAccount { address, pk });
             state.set(GameStates::InGame);
         }
     }

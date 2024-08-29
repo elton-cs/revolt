@@ -1,5 +1,5 @@
 use crate::{
-    plugins::dojo_systems::account::build_account,
+    plugins::{dojo_systems::account::build_account, dojo_to_bevy::game::GameModel},
     states::GameStates,
     tokio::TokioRuntime,
     utils::constants::{GAME_SYSTEM_CONTRACT_ADDRESS, GAME_SYSTEM_SELECTORS},
@@ -33,6 +33,7 @@ fn send_move_transaction(
     tokio: Res<TokioRuntime>,
     mut evr_kbd: EventReader<KeyboardInput>,
     player_account: Res<PlayerAccount>,
+    query_game: Query<&GameModel>,
 ) {
     let mut should_execute = false;
     let mut direction = 0;
@@ -70,7 +71,9 @@ fn send_move_transaction(
         let actions_contract_address = Felt::from_hex(GAME_SYSTEM_CONTRACT_ADDRESS).unwrap();
         let selector = get_selector_from_name(GAME_SYSTEM_SELECTORS[2]).unwrap();
 
-        let game_id = Felt::from_dec_str("1").unwrap();
+        // let game_id = Felt::from_dec_str("1").unwrap();
+        let game_id = query_game.single().id;
+        let game_id = Felt::from_dec_str(game_id.to_string().as_str()).unwrap();
         let direction = Felt::from_dec_str(direction.to_string().as_str()).unwrap();
         let calldata = vec![game_id, direction];
 
