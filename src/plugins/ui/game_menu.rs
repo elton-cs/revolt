@@ -27,6 +27,8 @@ impl Plugin for GameMenuPlugin {
 enum ButtonType {
     JoinGame,
     CreateGame,
+    ContinueAsP1,
+    ContinueAsP2,
 }
 
 #[derive(Resource)]
@@ -57,6 +59,8 @@ fn setup_ui(mut commands: Commands, asset_server: Res<AssetServer>) {
             for (text, button_type) in [
                 ("Join Game", ButtonType::JoinGame),
                 ("Create Game", ButtonType::CreateGame),
+                ("Continue as P1", ButtonType::ContinueAsP1),
+                ("Continue as P2", ButtonType::ContinueAsP2),
             ] {
                 parent
                     .spawn((
@@ -131,6 +135,14 @@ fn handle_button_events(
                 }
                 ButtonType::JoinGame => {
                     _ = join_game_writer.send(JoinGameEvent);
+                    pk = P2_PK.to_string();
+                    address = P2_ADDRESS.to_string();
+                }
+                ButtonType::ContinueAsP1 => {
+                    pk = P1_PK.to_string();
+                    address = P1_ADDRESS.to_string();
+                }
+                ButtonType::ContinueAsP2 => {
                     pk = P2_PK.to_string();
                     address = P2_ADDRESS.to_string();
                 }
