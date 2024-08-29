@@ -1,8 +1,13 @@
 use bevy::prelude::*;
 use revolt::{
+    debug_tools::DebugPlugin,
     plugins::{
-        camera::CenteredCameraPlugin, dojo_systems::SendTransactionsPlugin, dojo_to_bevy::RevoltModelsPlugin, render::DungeonRenderPlugin, ui::UIPlugin
-    }, states::GameStatesPlugin, tokio::TokioPlugin, torii::client::ToriiPlugin
+        camera::CenteredCameraPlugin, dojo_systems::SendTransactionsPlugin,
+        dojo_to_bevy::RevoltModelsPlugin, render::DungeonRenderPlugin, ui::UIPlugin,
+    },
+    states::GameStatesPlugin,
+    tokio::TokioPlugin,
+    torii::client::ToriiPlugin,
 };
 
 fn main() {
@@ -20,6 +25,7 @@ fn main() {
     // app.add_plugins(WorldInspectorPlugin::new());
     app.add_plugins(UIPlugin);
     // app.add_plugins(GameMenuPlugin);
+    app.add_plugins(DebugPlugin);
 
     app.run();
 }

@@ -19,7 +19,7 @@ impl Plugin for ToriiPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_torii_client);
         app.add_systems(Update, spawn_dojo_entities);
-        app.add_systems(Update, number_of_dojo_entities);
+        // app.add_systems(Update, number_of_dojo_entities);
     }
 }
 
@@ -54,7 +54,7 @@ pub fn setup_torii_client(mut commands: Commands, tokio: Res<TokioRuntime>) {
         };
         let all_entities = client.entities(query).await.unwrap();
         for entity in all_entities {
-            info!("Existing Entities: {:?}", entity);
+            // info!("Existing Entities: {:?}", entity);
             tx.send(entity).await.unwrap();
         }
 

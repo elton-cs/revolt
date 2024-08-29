@@ -13,7 +13,7 @@ impl Plugin for PlayerPlugin {
     }
 }
 
-#[derive(Component)]
+#[derive(Component, Debug)]
 pub struct PlayerModel {
     pub game_id: u32,
     // NOTE: player_address is a contract address but is expressed as a Felt type
