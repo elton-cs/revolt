@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use revolt::{
     plugins::{
+        ui::UIPlugin,
         camera::CenteredCameraPlugin, dojo_systems::SendTransactionsPlugin,
         dojo_to_bevy::RevoltModelsPlugin, render::DungeonRenderPlugin,
     },
@@ -19,6 +20,9 @@ fn main() {
     app.add_plugins(RevoltModelsPlugin);
     app.add_plugins(DungeonRenderPlugin);
     app.add_plugins(SendTransactionsPlugin);
+    // app.add_plugins(WorldInspectorPlugin::new());
+    app.add_plugins(UIPlugin);
+    // app.add_plugins(GameMenuPlugin);
 
     app.run();
 }
