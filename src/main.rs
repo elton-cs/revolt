@@ -1,12 +1,8 @@
 use bevy::prelude::*;
 use revolt::{
     plugins::{
-        ui::UIPlugin,
-        camera::CenteredCameraPlugin, dojo_systems::SendTransactionsPlugin,
-        dojo_to_bevy::RevoltModelsPlugin, render::DungeonRenderPlugin,
-    },
-    tokio::TokioPlugin,
-    torii::client::ToriiPlugin,
+        camera::CenteredCameraPlugin, dojo_systems::SendTransactionsPlugin, dojo_to_bevy::RevoltModelsPlugin, render::DungeonRenderPlugin, ui::UIPlugin
+    }, states::GameStatesPlugin, tokio::TokioPlugin, torii::client::ToriiPlugin
 };
 
 fn main() {
@@ -14,6 +10,7 @@ fn main() {
     app.add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()));
     // app.add_systems(Update, display_num_entities);
 
+    app.add_plugins(GameStatesPlugin);
     app.add_plugins(TokioPlugin);
     app.add_plugins(ToriiPlugin);
     app.add_plugins(CenteredCameraPlugin);

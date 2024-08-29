@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 
 pub struct GameMenuPlugin;
-
 impl Plugin for GameMenuPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, setup_ui)
@@ -89,15 +88,14 @@ fn button_system(
 
 fn handle_button_events(
     query: Query<(&Interaction, &ButtonType), (Changed<Interaction>, With<Button>)>,
-    mut join_game_writer: EventWriter<JoinGameEvent>,
     mut create_game_writer: EventWriter<CreateGameEvent>,
+    mut join_game_writer: EventWriter<JoinGameEvent>,
 ) {
     for (interaction, button_type) in query.iter() {
         if *interaction == Interaction::Pressed {
             match button_type {
-                ButtonType::CreateGame => create_game_writer.send(CreateGameEvent),
-                // ButtonType::JoinGame => join_game_writer.send(JoinGameEvent),
-                ButtonType::JoinGame => create_game_writer.send(CreateGameEvent),
+                ButtonType::CreateGame => _ = create_game_writer.send(CreateGameEvent),
+                ButtonType::JoinGame => _ = join_game_writer.send(JoinGameEvent),
             };
         }
     }
