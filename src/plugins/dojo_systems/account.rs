@@ -39,3 +39,21 @@ fn setup_starknet_contract_caller(mut commands: Commands) {
         );
     commands.insert_resource(BurnerWalletAccount(account));
 }
+
+pub fn build_account() -> SingleOwnerAccount<JsonRpcClient<HttpTransport>, LocalWallet> {
+    let provider = JsonRpcClient::new(HttpTransport::new(
+        Url::parse(STARKNET_RS_JSONRPC_URL).unwrap(),
+    ));
+    let signer = LocalWallet::from(SigningKey::from_secret_scalar(
+        Felt::from_hex(LOCAL_WALLET_PRIVATE_KEY).unwrap(),
+    ));
+    let address = Felt::from_hex(PLAYER_CONTRACT_ADDRESS).unwrap();
+
+    SingleOwnerAccount::new(
+        provider,
+        signer,
+        address,
+        cairo_short_string_to_felt("KATANA").unwrap(),
+        ExecutionEncoding::New,
+    )
+}
