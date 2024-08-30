@@ -70,3 +70,6 @@ pub const BUTTONS_SCALE: Vec3 = Vec3::splat(0.2);
 
 pub const CREATE_BUTTON_LOCATION: Vec3 = Vec3::new(40.0, -40.0, BUTTONS_Z_HEIGHT);
 pub const JOIN_BUTTON_LOCATION: Vec3 = Vec3::new(200.0, -40.0, BUTTONS_Z_HEIGHT);
+
+pub const MAX_HEALTH: u8 = 100;
+pub const PLAYER_STATS_Z_HEIGHT: f32 = 4.0;
