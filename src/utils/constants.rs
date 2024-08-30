@@ -1,7 +1,7 @@
 use bevy::math::Vec3;
 
 // Starknet.rs contstants for sending transactions
-pub const STARKNET_RS_JSONRPC_URL: &str = "http://localhost:5050/";
+pub const STARKNET_RS_JSONRPC_URL: &str = "http://10.175.151.36:5050/";
 
 // Player accounts
 pub const P1_ADDRESS: &str = "0xb3ff441a68610b30fd5e2abbf3a1548eb6ba6f3559f2862bf2dc757e5828ca";
@@ -21,9 +21,9 @@ pub const GAME_SYSTEM_CONTRACT_ADDRESS: &str =
 pub const GAME_SYSTEM_SELECTORS: [&str; 4] = ["create_game", "join_game", "move", "attack"];
 
 // Torii contstants for receiving entity updates
-pub const TORII_URL: &str = "http://localhost:8080";
-pub const TORII_RPC_URL: &str = "http://localhost:5050";
-pub const TORII_RELAY_URL: &str = "/ip4/127.0.0.1/tcp/9090";
+pub const TORII_URL: &str = "http://10.175.151.36:8080";
+pub const TORII_RPC_URL: &str = "http://10.175.151.36:5050";
+pub const TORII_RELAY_URL: &str = "/ip4/10.175.151.36/tcp/9090";
 pub const TORII_WORLD_CONTRACT: &str =
     "0x5d97c46d046f442f125b6cc83057e97ee6e848c4921126acd8ae9d17b55b369";
 pub const EXISTING_ENTITY_QUERY_LIMIT: u32 = 500;
