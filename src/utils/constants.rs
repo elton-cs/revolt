@@ -61,8 +61,8 @@ pub const GROUND_Z_HEIGHT: f32 = 0.0;
 pub const WALL_Z_HEIGHT: f32 = 1.0;
 pub const PLAYER_Z_HEIGHT: f32 = 2.0;
 
-pub const GROUND_TEXTURE_INDEX: usize = 0;
-pub const WALL_TEXTURE_INDEX: usize = 1;
+// pub const GROUND_TEXTURE_INDEX: usize = 0;
+pub const WALL_TEXTURE_INDEX: usize = 11;
 
 // UI constants
 pub const BUTTONS_Z_HEIGHT: f32 = 3.0;

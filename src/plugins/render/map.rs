@@ -1,9 +1,6 @@
 use crate::{
     plugins::dojo_to_bevy::{map::MapModel, tile::TileModel},
-    utils::constants::{
-        GROUND_TEXTURE_INDEX, GROUND_Z_HEIGHT, TILE_SCALE, TILE_SIZE, WALL_TEXTURE_INDEX,
-        WALL_Z_HEIGHT,
-    },
+    utils::constants::{GROUND_Z_HEIGHT, TILE_SCALE, TILE_SIZE, WALL_TEXTURE_INDEX, WALL_Z_HEIGHT},
 };
 use bevy::prelude::*;
 use rand::{seq::SliceRandom, thread_rng};
@@ -102,7 +99,7 @@ fn render_ground(
 
                 let texture_atlas = TextureAtlas {
                     layout: texture_atlas_layout_handle.clone(),
-                    index: GROUND_TEXTURE_INDEX,
+                    index: WALL_TEXTURE_INDEX,
                 };
 
                 let sprite_bundle = SpriteBundle {
@@ -124,8 +121,12 @@ fn render_walls(
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
     mut tiles_query: Query<(Entity, &TileModel), Without<RenderedTile>>,
 ) {
-    let map_texture = asset_server.load("2_tiles.png");
-    let map_layout = TextureAtlasLayout::from_grid(UVec2::new(16, 16), 2, 1, None, None);
+    // let map_texture = asset_server.load("2_tiles.png");
+    // let map_layout = TextureAtlasLayout::from_grid(UVec2::new(16, 16), 2, 1, None, None);
+
+    let map_texture = asset_server.load("cooked_by_hpmnk/PokeDojo_Tileset.png");
+    let map_layout = TextureAtlasLayout::from_grid(UVec2::new(16, 16), 5, 3, None, None);
+
     let texture_atlas_layout_handle = texture_atlas_layouts.add(map_layout);
 
     for (id, tile) in tiles_query.iter_mut() {
