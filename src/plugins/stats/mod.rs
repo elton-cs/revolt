@@ -57,6 +57,17 @@ fn init_stat_display(
             },
         );
 
+        let attack_cooldown = player.freeze;
+        let attack_text = format!("Attack CD: {}\n", attack_cooldown);
+        let attack_section = TextSection::new(
+            attack_text.clone(),
+            TextStyle {
+                font: font.clone(),
+                font_size,
+                color: Color::srgb(0.9, 0.9, 0.9),
+            },
+        );
+
         let score = player.score;
         let score_text = format!("Score: {}", score);
         let score_section = TextSection::new(
@@ -70,9 +81,14 @@ fn init_stat_display(
 
         commands.spawn((
             Text2dBundle {
-                text: Text::from_sections([position_section, health_section, score_section])
-                    // text: Text::from_section(health_text, text_style.clone())
-                    .with_justify(JustifyText::Center),
+                text: Text::from_sections([
+                    position_section,
+                    health_section,
+                    attack_section,
+                    score_section,
+                ])
+                // text: Text::from_section(health_text, text_style.clone())
+                .with_justify(JustifyText::Center),
                 transform: Transform::from_translation(Vec3::new(
                     (pos_index) as f32 * 250.0,
                     50.0,
@@ -102,9 +118,13 @@ fn update_stats(
                 let health_text = format!("Health: {}/{} \n", health, MAX_HEALTH);
                 text.sections[1].value = health_text;
 
+                let cd = player.freeze;
+                let cd_text = format!("Attack CD: {}\n", cd);
+                text.sections[2].value = cd_text;
+
                 let score = player.score;
                 let score_text = format!("Score: {}", score);
-                text.sections[2].value = score_text;
+                text.sections[3].value = score_text;
             }
         }
     }
