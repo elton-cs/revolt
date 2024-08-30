@@ -1,5 +1,5 @@
 use crate::{
-    plugins::dojo_systems::account::build_account,
+    plugins::{dojo_systems::account::build_account, render::attack::AttackResource},
     states::GameStates,
     tokio::TokioRuntime,
     utils::constants::{GAME_SYSTEM_CONTRACT_ADDRESS, GAME_SYSTEM_SELECTORS},
@@ -33,6 +33,7 @@ fn send_attack_transaction(
     tokio: Res<TokioRuntime>,
     mut evr_kbd: EventReader<KeyboardInput>,
     player_account: Res<PlayerAccount>,
+    get_rx: Res<AttackResource>,
 ) {
     let mut should_execute = false;
 
@@ -59,6 +60,8 @@ fn send_attack_transaction(
         let game_id = Felt::from_dec_str("1").unwrap();
         let calldata = vec![game_id];
 
+        let tx = get_rx.tx.clone();
+
         tokio.runtime.spawn(async move {
             let account = build_account(pk.as_str(), address.as_str());
             let result = account
@@ -71,6 +74,15 @@ fn send_attack_transaction(
                 .await;
 
             info!("SENT AN ATTACK TRANSACTION: {:?}", result);
+
+            match result {
+                Ok(_) => {
+                    tx.send(1).await.unwrap();
+                }
+                Err(e) => {
+                    error!("Attacking is on cooldown.");
+                }
+            }
         });
     }
 

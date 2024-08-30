@@ -59,6 +59,7 @@ pub const PLAYER_CAMERA_SCALE: f32 = 0.1;
 // Map rendering constants
 pub const GROUND_Z_HEIGHT: f32 = 0.0;
 pub const WALL_Z_HEIGHT: f32 = 1.0;
+pub const ATTACK_Z_HEIGHT: f32 = 1.5;
 pub const PLAYER_Z_HEIGHT: f32 = 2.0;
 
 // pub const GROUND_TEXTURE_INDEX: usize = 0;
