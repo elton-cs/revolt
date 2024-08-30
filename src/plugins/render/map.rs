@@ -75,7 +75,7 @@ fn render_ground_manual(
     }
 }
 
-fn render_ground(
+fn _render_ground(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
