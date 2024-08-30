@@ -1,8 +1,8 @@
-use crate::utils::constants::STARKNET_RS_JSONRPC_URL;
+use crate::utils::constants::{CHAIN_ID_IN_HEX, STARKNET_RS_JSONRPC_URL};
 use bevy::prelude::*;
 use starknet::{
     accounts::{ExecutionEncoding, SingleOwnerAccount},
-    core::utils::cairo_short_string_to_felt,
+    core::{chain_id, utils::cairo_short_string_to_felt},
     providers::{jsonrpc::HttpTransport, JsonRpcClient, Url},
     signers::{LocalWallet, SigningKey},
 };
@@ -30,11 +30,8 @@ pub fn build_account(
     ));
     let address = Felt::from_hex(player_address).unwrap();
 
-    SingleOwnerAccount::new(
-        provider,
-        signer,
-        address,
-        cairo_short_string_to_felt("KATANA").unwrap(),
-        ExecutionEncoding::New,
-    )
+    // let chain_id = cairo_short_string_to_felt("KATANA").unwrap(),
+    let chain_id = Felt::from_hex_unchecked(CHAIN_ID_IN_HEX);
+
+    SingleOwnerAccount::new(provider, signer, address, chain_id, ExecutionEncoding::New)
 }

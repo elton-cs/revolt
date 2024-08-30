@@ -1,21 +1,23 @@
 use bevy::math::Vec3;
+use starknet_crypto::Felt;
 
 // ALL SLOT CONSTANTS
 
 pub const P1_ADDRESS: &str = "0x6d27f924146a521e8e7d3d248fc40648b86e0033528d71323042344600efe7b";
 pub const P1_PK: &str = "0x7ed0caf9d108bc448b57b9e9b637b8af8fec78069afaff7bcddcd7dc3555c75";
 
-pub const P2_ADDRESS: &str = "0x771f592ba6b72d4d102091728068336d300e7ba65cf4dd826d252764cd14b28";
-pub const P2_PK: &str = "0xe0a487d90aa262f3d199998fbcfb1e7c63ceb8cadcbbdbdf3258f7848551f3";
+pub const P2_ADDRESS: &str = "0x21c64ed0fd15f981ab5ea27e4d40ba517d97693fe916fdd69f85d05f21b503a";
+pub const P2_PK: &str = "0x1ae2fc0c99a2d6e1375d4f3f7ae97b8d7e4bea98b55df1cfd357ad5110d1599";
 
 pub const GAME_SYSTEM_CONTRACT_ADDRESS: &str =
-    "0x34a3bf116ba899adcc24e885548dcd981aa96c0aeac9ccf551429fd0c6f91cf";
-pub const STARKNET_RS_JSONRPC_URL: &str = "https://api.cartridge.gg/x/revolt/katana";
-pub const TORII_URL: &str = "https://api.cartridge.gg/x/revolt/torii";
-pub const TORII_RPC_URL: &str = "https://api.cartridge.gg/x/revolt/katana";
-pub const TORII_RELAY_URL: &str = "/ip4/10.8.26.138/tcp/9090";
+    "0x034a3bf116ba899adcc24e885548dcd981aa96c0aeac9ccf551429fd0c6f91cf";
+pub const STARKNET_RS_JSONRPC_URL: &str = "https://api.cartridge.gg/x/revolt-test/katana";
+pub const TORII_URL: &str = "https://api.cartridge.gg/x/revolt-test/torii";
+pub const TORII_RPC_URL: &str = "https://api.cartridge.gg/x/revolt-test/katana";
+pub const TORII_RELAY_URL: &str = "/ip4/10.8.30.132/tcp/9090";
 pub const TORII_WORLD_CONTRACT: &str =
-    "0x458d0ce5b14a4844092bdb62050f462d53362304a13febbac6d973691d61be2";
+    "0x6dc9d3d55f4cace6dfda9dd3478ec7ab60a1637149f8ff430efcd313635492";
+pub const CHAIN_ID_IN_HEX: &str = "0x57505f5245564f4c545f54455354";
 
 // ALL LOCAL CONSTANTS
 
