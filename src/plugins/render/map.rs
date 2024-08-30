@@ -6,6 +6,7 @@ use crate::{
     },
 };
 use bevy::prelude::*;
+use rand::{seq::SliceRandom, thread_rng};
 
 pub struct MapRendererPlugin;
 impl Plugin for MapRendererPlugin {
@@ -27,13 +28,24 @@ fn render_ground_manual(
     asset_server: Res<AssetServer>,
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
-    let map_texture = asset_server.load("2_tiles.png");
-    let map_layout = TextureAtlasLayout::from_grid(UVec2::new(16, 16), 2, 1, None, None);
+    // let map_texture = asset_server.load("2_tiles.png");
+    // let map_layout = TextureAtlasLayout::from_grid(UVec2::new(16, 16), 2, 1, None, None);
+
+    let map_texture = asset_server.load("cooked_by_hpmnk/PokeDojo_Tileset.png");
+    let map_layout = TextureAtlasLayout::from_grid(UVec2::new(16, 16), 5, 3, None, None);
     let texture_atlas_layout_handle = texture_atlas_layouts.add(map_layout);
 
     // hardcoding the map size like a chad developer
     let max_x = 35;
     let max_y = 19;
+
+    let mut flip = false;
+    let light_tile_indices = [0, 1, 2, 3, 4];
+    let dark_tile_indices = [5, 6, 7, 8, 9];
+    // let light_tile = 0;
+    // let dark_tile = 5;
+
+    let mut rng = thread_rng();
 
     for x in 0..max_x {
         for y in 0..max_y {
@@ -42,10 +54,18 @@ fn render_ground_manual(
             let mut transform = Transform::from_translation(Vec3::new(x, y, GROUND_Z_HEIGHT));
             transform.scale = TILE_SCALE;
 
+            let tile_set = match flip {
+                true => light_tile_indices,
+                false => dark_tile_indices,
+            };
+            let random_tile = tile_set.choose(&mut rng).unwrap();
+
             let texture_atlas = TextureAtlas {
                 layout: texture_atlas_layout_handle.clone(),
-                index: GROUND_TEXTURE_INDEX,
+                // index: GROUND_TEXTURE_INDEX,
+                index: *random_tile,
             };
+            flip = !flip;
 
             let sprite_bundle = SpriteBundle {
                 transform,
