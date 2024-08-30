@@ -42,7 +42,7 @@ fn render_player(
     for (id, player) in query_player.iter() {
         let (x, y) = (
             player.pos_x as f32 * TILE_SIZE,
-            player.pos_y as f32 * TILE_SIZE * -1.0,
+            (player.pos_y as f32 * TILE_SIZE * -1.0) + 6.0,
         );
 
         let mut transform = Transform::from_translation(Vec3::new(x, y, PLAYER_Z_HEIGHT));
@@ -76,7 +76,7 @@ fn update_player_render(
             if parent_entity_id == id {
                 let (x, y) = (
                     player.pos_x as f32 * TILE_SIZE,
-                    player.pos_y as f32 * TILE_SIZE * -1.0,
+                    (player.pos_y as f32 * TILE_SIZE * -1.0) + 6.0,
                 );
 
                 transform.translation = Vec3::new(x, y, PLAYER_Z_HEIGHT);
