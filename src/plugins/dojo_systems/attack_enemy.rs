@@ -1,5 +1,5 @@
 use crate::{
-    plugins::dojo_systems::account::build_account,
+    plugins::{dojo_systems::account::build_account, render::animations::TriggerAttackAnimation},
     states::GameStates,
     tokio::TokioRuntime,
     utils::constants::{GAME_SYSTEM_CONTRACT_ADDRESS, GAME_SYSTEM_SELECTORS},
@@ -33,6 +33,7 @@ fn send_attack_transaction(
     tokio: Res<TokioRuntime>,
     mut evr_kbd: EventReader<KeyboardInput>,
     player_account: Res<PlayerAccount>,
+    mut attack_trigger_writer: EventWriter<TriggerAttackAnimation>,
 ) {
     let mut should_execute = false;
 
