@@ -14,7 +14,7 @@ impl Plugin for StatsPlugin {
             Update,
             init_stat_display.run_if(in_state(GameStates::InGame)),
         );
-        // app.add_systems(Startup, setup);
+        app.add_systems(Update, update_stats.run_if(in_state(GameStates::InGame)));
     }
 }
 
@@ -22,36 +22,7 @@ impl Plugin for StatsPlugin {
 pub struct PlayerStats;
 
 #[derive(Component, Debug)]
-pub struct ParentStatsId(Entity);
-
-// fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-//     let text = "Player Stats";
-//     commands
-//         .spawn(NodeBundle {
-//             style: Style {
-//                 width: Val::Percent(100.0),
-//                 height: Val::Percent(100.0),
-//                 justify_content: JustifyContent::Default,
-//                 align_items: AlignItems::Center,
-//                 flex_direction: FlexDirection::Column,
-//                 ..default()
-//             },
-//             transform: Transform::from_translation(Vec3::new(10.0, 0.0, PLAYER_STATS_Z_HEIGHT)),
-//             ..default()
-//         })
-//         .with_children(|p| {
-//             for text in ["Player Stats", "Health", "Mana", "Attack", "Defense"] {
-//                 p.spawn(TextBundle::from_section(
-//                     text,
-//                     TextStyle {
-//                         font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-//                         font_size: 24.0,
-//                         color: Color::srgb(0.9, 0.9, 0.9),
-//                     },
-//                 ));
-//             }
-//         });
-// }
+pub struct ParentStatsId(pub Entity);
 
 fn init_stat_display(
     mut commands: Commands,
@@ -60,18 +31,12 @@ fn init_stat_display(
     // query_existing_stats: Query<Entity, With<PlayerStats>>,
 ) {
     let font = asset_server.load("fonts/FiraSans-Bold.ttf");
-    let font_size = 5.0;
-    // let text_style = TextStyle {
-    //     font: font.clone(),
-    //     font_size: 10.0,
-    //     ..default()
-    // };
-    let text_justification = JustifyText::Center;
+    let font_size = 10.0;
 
     let mut pos_index = 0;
     for (id, player) in query_stats.iter() {
         let health = player.health;
-        let health_text = format!("Health: {}/{}", health, MAX_HEALTH);
+        let health_text = format!("Health: {}/{} \n", health, MAX_HEALTH);
         let health_section = TextSection::new(
             health_text.clone(),
             TextStyle {
@@ -80,8 +45,9 @@ fn init_stat_display(
                 color: Color::srgb(0.9, 0.9, 0.9),
             },
         );
+
         let (x, y) = (player.pos_x, player.pos_y);
-        let position_text = format!("Position: ({}, {})", x, y);
+        let position_text = format!("Position: ({}, {}) \n", x, y);
         let position_section = TextSection::new(
             position_text.clone(),
             TextStyle {
@@ -91,14 +57,25 @@ fn init_stat_display(
             },
         );
 
+        let score = player.score;
+        let score_text = format!("Score: {}", score);
+        let score_section = TextSection::new(
+            score_text.clone(),
+            TextStyle {
+                font: font.clone(),
+                font_size,
+                color: Color::srgb(0.9, 0.9, 0.9),
+            },
+        );
+
         commands.spawn((
             Text2dBundle {
-                text: Text::from_sections([position_section, health_section])
+                text: Text::from_sections([position_section, health_section, score_section])
                     // text: Text::from_section(health_text, text_style.clone())
                     .with_justify(JustifyText::Center),
                 transform: Transform::from_translation(Vec3::new(
                     (pos_index) as f32 * 250.0,
-                    20.0,
+                    50.0,
                     PLAYER_STATS_Z_HEIGHT,
                 )),
                 ..default()
@@ -110,4 +87,25 @@ fn init_stat_display(
     }
 }
 
-fn update_stats() {}
+fn update_stats(
+    mut query_text: Query<(&mut Text, &ParentStatsId)>,
+    query_player_data: Query<(Entity, &PlayerModel), With<PlayerStats>>,
+) {
+    for (mut text, parent_id) in query_text.iter_mut() {
+        for (id, player) in query_player_data.iter() {
+            if parent_id.0 == id {
+                let (x, y) = (player.pos_x, player.pos_y);
+                let position_text = format!("Position: ({}, {}) \n", x, y);
+                text.sections[0].value = position_text;
+
+                let health = player.health;
+                let health_text = format!("Health: {}/{} \n", health, MAX_HEALTH);
+                text.sections[1].value = health_text;
+
+                let score = player.score;
+                let score_text = format!("Score: {}", score);
+                text.sections[2].value = score_text;
+            }
+        }
+    }
+}
