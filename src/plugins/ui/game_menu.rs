@@ -127,6 +127,7 @@ fn handle_button_events(
         if *interaction == Interaction::Pressed {
             let pk: String;
             let address: String;
+
             match button_type {
                 ButtonType::CreateGame => {
                     _ = create_game_writer.send(CreateGameEvent);

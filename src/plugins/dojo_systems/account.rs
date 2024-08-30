@@ -2,7 +2,6 @@ use crate::utils::constants::{CHAIN_ID_IN_HEX, STARKNET_RS_JSONRPC_URL};
 use bevy::prelude::*;
 use starknet::{
     accounts::{ExecutionEncoding, SingleOwnerAccount},
-    core::{chain_id, utils::cairo_short_string_to_felt},
     providers::{jsonrpc::HttpTransport, JsonRpcClient, Url},
     signers::{LocalWallet, SigningKey},
 };
